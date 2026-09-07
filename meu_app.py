@@ -23,9 +23,11 @@ with col2_dir:
         label_visibility="collapsed",
         key="seletor_chat"
     )
-
+    if opcao_chat == "💬 Abrir Chat de Negociação":
+        st.link_button("Ir para o WhatsApp do Pedreiro", "https://wa.me+91+991211780")
+        
 st.write(" ")  # Pequeno espaço entre as linhas
-
+    
 # ========================================================================= #
 # 🏪 LINHA 3: PREÇOS DO DEPÓSITO (Esquerda) E TIPO DA CONSTRUÇÃO (Direita)
 # ========================================================================= #
