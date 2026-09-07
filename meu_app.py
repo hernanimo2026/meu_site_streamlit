@@ -148,65 +148,141 @@ with col3_dir:
     )
 
 st.write("---")
-# =========================================================================
-# 🏠 ENTRADA DE DADOS DA OBRA (Área, Paredes, etc.)
-# =========================================================================
-st.subheader("📐 Dimensões da Obra")
-area_parede = st.number_input("Área total de paredes (m²):", value=50.0, step=5.0)
 
 # =========================================================================
-# 🧮 LÓGICA DE CÁLCULO DE QUANTIDADES
+# 🏠 ENTRADA DE DADOS DA OBRA (Medições e Cômodos)
 # =========================================================================
-# Índices médios de consumo por m² de parede (Alvenaria de bloco/tijolo deitado):
-CONSUMO_TIJOLO_POR_M2 = 26  # ex: 26 tijolos por m²
-CONSUMO_CIMENTO_POR_M2 = 0.2  # ex: 0.2 sacos por m² (assentamento + reboco)
-CONSUMO_AREIA_POR_M2 = 0.05   # ex: 0.05 m³ por m²
+st.subheader("📐 1. Dimensões do Cômodo e Paredes")
 
-# Calculando as quantidades brutas necessárias:
-qtd_tijolos_total = area_parede * CONSUMO_TIJOLO_POR_M2
-milheiros_tijolo = qtd_tijolos_total / 1000
+col_dim1, col_dim2, col_dim3 = st.columns(3)
 
-sacos_cimento_total = area_parede * CONSUMO_CIMENTO_POR_M2
-metros_areia_total = area_parede * CONSUMO_AREIA_POR_M2
+with col_dim1:
+    largura = st.number_input("Largura do Cômodo (m):", value=4.0, step=0.5, key="inp_largura")
+    comprimento = st.number_input("Comprimento do Cômodo (m):", value=5.0, step=0.5, key="inp_comprimento")
 
+with col_dim2:
+    altura = st.number_input("Pé Direito / Altura da Parede (m):", value=2.80, step=0.1, key="inp_altura")
+    distancia_colunas = st.slider("Distância entre Colunas (m):", min_value=2.0, max_value=6.0, value=3.0, step=0.5, key="inp_dist_col")
+
+with col_dim3:
+    area_piso = largura * comprimento
+    perimetro = (largura + comprimento) * 2
+    area_parede_total = perimetro * altura
+
+    st.info(f"**Área do Piso:** {area_piso:.2f} m²")
+    st.info(f"**Perímetro Linear:** {perimetro:.2f} m")
+    st.info(f"**Área Bruta de Parede:** {area_parede_total:.2f} m²")
+
+st.write("---")
 
 # =========================================================================
-# 💰 CÁLCULO DOS CUSTOS (Usando as variáveis do Depósito)
+# ⚙️ OPÇÕES CONSTRUTIVAS (Estruturas e Reboco)
 # =========================================================================
-# Multiplica-se a quantidade calculada pela variável correspondente do preço:
+st.subheader("⚙️ 2. Escolha de Estruturas e Acabamentos")
+
+opcoes_ferragem = [
+    "0. Sem Ferragem",
+    "1. Ferragem 3/8\"",
+    "2. Ferragem 5/16\"",
+    "3. Treliça H8",
+    "4. Treliça H12"
+]
+
+opcoes_reboco = [
+    "0. Sem Reboco",
+    "1. Reboco em 1 Lado",
+    "2. Reboco em 2 Lados (Interno e Externo)"
+]
+
+col_op1, col_op2 = st.columns(2)
+
+with col_op1:
+    st.markdown("**🔩 Ferragens da Estrutura:**")
+    opt_viga_baldram = st.selectbox("Viga Baldrame:", opcoes_ferragem, index=1, key="sel_viga_baldram")
+    opt_viga_respaudo = st.selectbox("Viga de Respaudo:", opcoes_ferragem, index=1, key="sel_viga_resp")
+    opt_vergas = st.selectbox("Vergas / Contra-vergas:", opcoes_ferragem, index=2, key="sel_vergas")
+    opt_colunas = st.selectbox("Colunas / Pilares:", opcoes_ferragem, index=1, key="sel_colunas")
+
+with col_op2:
+    st.markdown("**🧱 Acabamento de Parede:**")
+    opt_reboco = st.selectbox("Opção de Reboco/Massa:", opcoes_reboco, index=2, key="sel_reboco")
+
+st.write("---")
+
+# =========================================================================
+# 💰 MÃO DE OBRA, VALORES EXTRAS E DESCONTOS
+# =========================================================================
+st.subheader("💰 3. Valores Financeiros e Serviços")
+
+col_fin1, col_fin2 = st.columns(2)
+
+with col_fin1:
+    valor_mao_obra = st.number_input("Mão de Obra Total (R$):", value=2500.0, step=100.0, key="inp_mo")
+    valor_servicos_extras = st.number_input("Serviços Extras (R$):", value=500.0, step=50.0, key="inp_extras_serv")
+
+with col_fin2:
+    valor_materiais_extras = st.number_input("Reserva p/ Materiais Extras (R$):", value=300.0, step=50.0, key="inp_extras_mat")
+    valor_desconto = st.number_input("Desconto Concedido (R$):", value=0.0, step=50.0, key="inp_desconto")
+
+st.write("---")
+
+# =========================================================================
+# 🧮 LÓGICA DE CÁLCULO E INTEGRAÇÃO DE PREÇOS
+# =========================================================================
+
+# Dicionário mapeando a seleção do usuário para o preço vindo do depósito
+mapa_precos_ferro = {
+    "0. Sem Ferragem": 0.0,
+    "1. Ferragem 3/8\"": preco_ferro_38_7x14,
+    "2. Ferragem 5/16\"": preco_ferro_516_7x14,
+    "3. Treliça H8": preco_trelica_h8,
+    "4. Treliça H12": preco_trelica_h12
+}
+
+# 1. Tijolos e Agregados para Parede
+CONSUMO_TIJOLO_POR_M2 = 26
+qtd_tijolos_total = area_parede_total * CONSUMO_TIJOLO_POR_M2
+milheiros_tijolo = qtd_tijolos_total / 1000.0
 custo_tijolo = milheiros_tijolo * preco_tijolo
-custo_cimento = sacos_cimento_total * preco_cimento
-custo_areia = metros_areia_total * preco_areia
 
-custo_total_alvenaria = custo_tijolo + custo_cimento + custo_areia
+# 2. Cálculo de Colunas e Vigas
+qtd_colunas = math.ceil(perimetro / distancia_colunas)
+metros_totais_colunas = qtd_colunas * altura
+varas_colunas = math.ceil(metros_totais_colunas / 6.0)
+custo_colunas = varas_colunas * mapa_precos_ferro[opt_colunas]
 
+varas_baldrame = math.ceil(perimetro / 6.0)
+custo_baldrame = varas_baldrame * mapa_precos_ferro[opt_viga_baldram]
+
+varas_respaudo = math.ceil(perimetro / 6.0)
+custo_respaudo = varas_respaudo * mapa_precos_ferro[opt_viga_respaudo]
+
+# 3. Cálculo de Reboco
+fator_reboco = 0
+if opt_reboco == "1. Reboco em 1 Lado":
+    fator_reboco = 1
+elif opt_reboco == "2. Reboco em 2 Lados (Interno e Externo)":
+    fator_reboco = 2
+
+area_total_reboco = area_parede_total * fator_reboco
+sacos_cimento_reboco = area_total_reboco * 0.15
+custo_cimento_reboco = sacos_cimento_reboco * preco_cimento
+
+# Fechamento Financeiro
+custo_ferragens_total = custo_colunas + custo_baldrame + custo_respaudo
+custo_materiais_total = custo_tijolo + custo_ferragens_total + custo_cimento_reboco + valor_materiais_extras
+subtotal = custo_materiais_total + valor_mao_obra + valor_servicos_extras
+total_geral = subtotal - valor_desconto
 
 # =========================================================================
-# 📊 EXIBIÇÃO DOS RESULTADOS NA TELA
+# 📋 RESUMO DO ORÇAMENTO NA TELA
 # =========================================================================
-st.subheader("📋 Resumo do Orçamento de Alvenaria")
+st.subheader("📋 Resumo do Orçamento")
 
-col_res1, col_res2, col_res3 = st.columns(3)
+m1, m2, m3, m4 = st.columns(4)
+m1.metric("Tijolos", f"{int(qtd_tijolos_total)} un")
+m2.metric("Nº de Colunas", f"{qtd_colunas} un")
+m3.metric("Total Materiais", f"R$ {custo_materiais_total:,.2f}")
+m4.metric("TOTAL DA OBRA", f"R$ {total_geral:,.2f}")
 
-with col_res1:
-    st.metric(
-        label="Tijolos", 
-        value=f"{int(qtd_tijolos_total)} un", 
-        delta=f"R$ {custo_tijolo:.2f}"
-    )
-
-with col_res2:
-    st.metric(
-        label="Cimento", 
-        value=f"{sacos_cimento_total:.1f} sacos", 
-        delta=f"R$ {custo_cimento:.2f}"
-    )
-
-with col_res3:
-    st.metric(
-        label="Areia", 
-        value=f"{metros_areia_total:.2f} m³", 
-        delta=f"R$ {custo_areia:.2f}"
-    )
-
-st.success(f"**Custo Total Estimado de Alvenaria:** R$ {custo_total_alvenaria:,.2f}")
+st.success(f"**Valor Final Estimado:** R$ {total_geral:,.2f}")
