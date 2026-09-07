@@ -15,9 +15,9 @@ st.title("🧮 CALCULADORA DO PEDREIRO")
 col2_esq, col2_dir = st.columns(2)
 with col2_esq:
     st.write("Sistemas de Orçamentos Rápidos — Serviços Gerais")
-
+    st.write("Mensagem do dia? [Clique aqui] (https://youtu.be/f0x-BL8MkHc?si=SJXu-Lv-MhLEaFse)")
 with col2_dir:
-    st.link_button("WhatsApp do pedreiro", "https://wa.me")
+    st.link_button("WhatsApp do pedreiro", "https://wa.me091991211780")
     st.write(" ")  # Pequeno espaço entre as linhas
 
 # ========================================================================= #
