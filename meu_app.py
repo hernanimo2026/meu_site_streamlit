@@ -17,8 +17,7 @@ with col2_esq:
     st.write("Sistemas de Orçamentos Rápidos — Serviços Gerais")
     st.write("Mensagem do dia? [Clique aqui] (https://youtu.be/f0x-BL8MkHc?si=SJXu-Lv-MhLEaFse)")
 with col2_dir:
-    st.link_button("WhatsApp do pedreiro", "https://wa.me/5591991211780")
-    st.write(" ")  # Pequeno espaço entre as linhas
+    st.link_button("WhatsApp do pedreiro", "https://wa.me/5591991211780?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento.")
 
 # ========================================================================= #
 # 🏪 LINHA 3: PREÇOS DO DEPÓSITO (Esquerda) E TIPO DA CONSTRUÇÃO (Direita)
