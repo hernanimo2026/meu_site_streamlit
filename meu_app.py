@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Estilização visual para o botão do WhatsApp e ajustes de tela
+# Estilização visual para o botão do WhatsApp
 st.markdown("""
 <style>
     .stLinkButton > button {
@@ -24,15 +24,15 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ========================================================================= #
+# =========================================================================
 # 🧱 LINHA 1: TÍTULO PRINCIPAL E AVISO DISCRETO
-# ========================================================================= #
+# =========================================================================
 st.title("🧮 CALCULADORA DO PEDREIRO")
 st.caption("⚠️ O programa está em fase de teste e pode conter erros.")
 
-# ========================================================================= #
-# 🧭 LINHA 2: SUBTÍTULO (Esquerda) E BOTÃO WHATSAPP (Direita)
-# ========================================================================= #
+# =========================================================================
+# 🧭 LINHA 2: SUBTÍTULO E BOTÃO WHATSAPP
+# =========================================================================
 col2_esq, col2_dir = st.columns(2)
 with col2_esq:
     st.write("Sistemas de Orçamentos Rápidos — Serviços Gerais")
@@ -44,9 +44,9 @@ with col2_dir:
         "https://wa.me/5591991211780?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento."
     )
 
-# ========================================================================= #
-# 🏪 LINHA 3: PREÇOS DO DEPÓSITO (Esquerda) E TIPO DA CONSTRUÇÃO (Direita)
-# ========================================================================= #
+# =========================================================================
+# 🏪 LINHA 3: PREÇOS DO DEPÓSITO E TIPO DA CONSTRUÇÃO
+# =========================================================================
 col3_esq, col3_dir = st.columns(2)
 with col3_esq:
     with st.expander("🏪 Preços dos Materiais no Depósito (Clique para abrir)"):
@@ -104,11 +104,9 @@ with col3_esq:
         preco_registro_agua = st.number_input("Registro de Gaveta/Geral 3/4\" (Unidade R$):", value=45.0, step=2.0, key="p_registro")
         preco_registro_chuveiro = st.number_input("Registro de Pressão (Chuveiro) 3/4\" (Unidade R$):", value=55.0, step=2.0, key="p_reg_chuveiro")
         
-        # Conexões Ponta Azul (Bucha de Latão)
         preco_joelho_azul_34 = st.number_input("Joelho 90º Ponta Azul 3/4\" (Unidade R$):", value=8.5, step=0.5, key="p_ja_34")
         preco_t_azul_34 = st.number_input("Tê Ponta Azul 3/4\" (Unidade R$):", value=11.0, step=0.5, key="p_ta_34")
         
-        # Conexões Soldáveis Comuns 3/4" (25mm)
         preco_luva_34 = st.number_input("Luva Soldável 3/4\" (Unidade R$):", value=1.5, step=0.2, key="p_luv_34")
         preco_joelho_34 = st.number_input("Joelho 90º Soldável 3/4\" (Unidade R$):", value=1.8, step=0.2, key="p_joe_34")
         preco_curva_34 = st.number_input("Curva 90º Soldável 3/4\" (Unidade R$):", value=4.5, step=0.5, key="p_cur_34")
@@ -117,8 +115,8 @@ with col3_esq:
         
         st.markdown("**🚽 Esgoto e Drenagem:**")
         preco_cano_esgoto_100 = st.number_input("Cano de Esgoto 100mm / Barra 6m (R$):", value=62.0, step=2.0, key="p_c_esg_100")
-        preco_cano_esgoto_50 = st.number_input("Cano de Esgoto 50mm (50ml) / Barra 6m (R$):", value=32.0, step=1.0, key="p_c_esg_50")
-        preco_cano_esgoto_40 = st.number_input("Cano de Esgoto 40mm (40ml) / Barra 6m (R$):", value=24.0, step=1.0, key="p_c_esg_40")
+        preco_cano_esgoto_50 = st.number_input("Cano de Esgoto 50mm / Barra 6m (R$):", value=32.0, step=1.0, key="p_c_esg_50")
+        preco_cano_esgoto_40 = st.number_input("Cano de Esgoto 40mm / Barra 6m (R$):", value=24.0, step=1.0, key="p_c_esg_40")
         preco_conexao_esgoto = st.number_input("Média p/ Conexões de Esgoto (Tê, Curva) (R$):", value=8.0, step=0.5, key="p_con_esg")
         
         # --- ⚡ 7. ELÉTRICA ---
@@ -132,9 +130,9 @@ with col3_esq:
         preco_fio_25 = st.number_input("Cabo Elétrico Flexível 2,5mm² / Rolo 100m (R$):", value=160.0, step=5.0, key="p_fio_25")
         preco_fio_40 = st.number_input("Cabo Elétrico Flexível 4,0mm² / Rolo 100m (R$):", value=260.0, step=5.0, key="p_fio_40")
 
-        # --- 🏠 8. COBERTURA AND TELHAS ---
+        # --- 🏠 8. COBERTURA E TELHAS ---
         st.markdown("**🏠 Cobertura e Telhas:**")
-        preco_telha_sanduiche = st.number_input("Telha Sanduíche Termoacústica (Preço por m²) (R$):", value=95.0, step=5.0, key="p_telha_sand")
+        preco_telha_sanduiche = st.number_input("Telha Sanduíche Termoacústica (m²) (R$):", value=95.0, step=5.0, key="p_telha_sand")
         preco_telha_americana = st.number_input("Preço do Milheiro de Telha Cerâmica (R$):", value=1800.0, step=50.0, key="p_telha_am")
         preco_telha_fibro_244 = st.number_input("Telha Fibrocimento 2,44 x 1,05m (R$):", value=58.0, step=2.0, key="p_telha_fib_244")
         preco_telha_fibro_366 = st.number_input("Telha Fibrocimento 3,66 x 1,05m (R$):", value=89.0, step=2.0, key="p_telha_fib_366")
@@ -143,7 +141,6 @@ with col3_dir:
     tipo_obra = st.selectbox(
         "Escolha o tipo de construção:",
         ["🏠 Casas e Barracões", "🧱 Construção de Muros", "🔨 Reformas em Geral"],
-        label_visibility="collapsed",
         key="seletor_obra"
     )
 
@@ -199,7 +196,7 @@ st.write("---")
 # =========================================================================
 st.subheader("📏 PASSO 5: ALTURA PERSONALIZADA (OPCIONAL)")
 
-if "seletor_obra" in st.session_state and "Muros" in st.session_state["seletor_obra"]:
+if "Muros" in tipo_obra:
     sugestao = 2.00
     st.write("Para **Muro**, a altura sugerida é de **2.00m**.")
 else:
@@ -223,8 +220,9 @@ st.info(f"**Altura definida:** {altura:.2f} metros.")
 st.success(f"**A área total das paredes é de:** {area_paredes:.2f} m²")
 
 st.write("---")
+
 # =========================================================================
-# ⚙️ OPÇÕES CONSTRUTIVAS (Estruturas e Reboco)
+# ⚙️ 2. ESCOLHA DE ESTRUTURAS E ACABAMENTOS (COM PILARES INTEGRADOS)
 # =========================================================================
 st.subheader("⚙️ 2. Escolha de Estruturas e Acabamentos")
 
@@ -249,7 +247,23 @@ with col_op1:
     opt_viga_baldram = st.selectbox("Viga Baldrame:", opcoes_ferragem, index=1, key="sel_viga_baldram")
     opt_viga_respaudo = st.selectbox("Viga de Respaudo:", opcoes_ferragem, index=1, key="sel_viga_resp")
     opt_vergas = st.selectbox("Vergas / Contra-vergas:", opcoes_ferragem, index=2, key="sel_vergas")
-    opt_colunas = st.selectbox("Colunas / Pilares:", opcoes_ferragem, index=1, key="sel_colunas")
+    
+    st.markdown("**🏛️ Pilares (Colunas em pé):**")
+    opcao_pilar = st.selectbox(
+        "Qual tipo de COLUNA PRONTA (6m) usar nos pilares?",
+        [
+            "1 - Coluna Pronta de Ferro 3/8 (Mais reforçada)",
+            "2 - Coluna Pronta de Ferro 5/16 (Mais econômica)",
+            "3 - Treliça Pronta H8/H12 (Mais leve)",
+            "4 - Não incluir colunas nos pilares (Opcional)"
+        ],
+        key="sel_opcao_pilar"
+    )
+    
+    if "4 -" not in opcao_pilar:
+        qtd_pilares = st.number_input("Quantos pilares a obra vai ter?", min_value=1, value=6, step=1, key="inp_qtd_pilares")
+    else:
+        qtd_pilares = 0
 
 with col_op2:
     st.markdown("**🧱 Acabamento de Parede:**")
@@ -258,7 +272,7 @@ with col_op2:
 st.write("---")
 
 # =========================================================================
-# 💰 MÃO DE OBRA, VALORES EXTRAS E DESCONTOS
+# 💰 3. VALORES FINANCEIROS E SERVIÇOS
 # =========================================================================
 st.subheader("💰 3. Valores Financeiros e Serviços")
 
@@ -275,13 +289,10 @@ with col_fin2:
 st.write("---")
 
 # =========================================================================
-# 🧮 LÓGICA DE CÁLCULO E INTEGRAÇÃO DE PREÇOS
+# 🧮 CÁLCULO DETALHADO DE MATERIAIS E VALORES
 # =========================================================================
 
-# Distância padrão de colunas (caso não tenha sido informada acima)
-distancia_colunas = 3.0
-
-# Dicionário mapeando a seleção do usuário para o preço vindo do depósito
+# Tabela de preços de ferragem
 mapa_precos_ferro = {
     "0. Sem Ferragem": 0.0,
     "1. Ferragem 3/8\"": preco_ferro_38_7x14,
@@ -290,35 +301,13 @@ mapa_precos_ferro = {
     "4. Treliça H12": preco_trelica_h12
 }
 
-# =========================================================================
-# 🔩 SELEÇÃO DE PILARES/COLUNAS
-# =========================================================================
-st.subheader("🔩 Escolha dos Pilares da Obra")
+# 1. Pilares
+if "4 -" not in opcao_pilar:
+    metros_pilares = qtd_pilares * altura
+    pecas_pilar_6m = math.ceil(metros_pilares / 6.0)
+else:
+    pecas_pilar_6m = 0.0
 
-col_pil1, col_pil2 = st.columns(2)
-
-with col_pil1:
-    opcao_pilar = st.selectbox(
-        "Qual tipo de COLUNA PRONTA (6m) usar nos pilares?",
-        [
-            "1 - Coluna Pronta de Ferro 3/8 (Mais reforçada)",
-            "2 - Coluna Pronta de Ferro 5/16 (Mais econômica)",
-            "3 - Treliça Pronta H8/H12 (Mais leve)",
-            "4 - Não incluir colunas nos pilares (Opcional)"
-        ],
-        key="sel_opcao_pilar"
-    )
-
-with col_pil2:
-    if "4 -" not in opcao_pilar:
-        qtd_pilares = st.number_input("Quantos pilares (colunas em pé) a obra vai ter?", min_value=1, value=6, step=1, key="inp_qtd_pilares")
-        metros_pilares = qtd_pilares * altura
-        pecas_pilar_6m = math.ceil(metros_pilares / 6.0)
-    else:
-        qtd_pilares = 0
-        pecas_pilar_6m = 0.0
-
-# Definição do tipo e preço unitário da coluna
 if "1 -" in opcao_pilar:
     tipo_pilar = "Coluna 3/8"
     preco_pilar_un = preco_ferro_38_7x14
@@ -334,35 +323,28 @@ else:
 
 custo_pilares_total = pecas_pilar_6m * preco_pilar_un
 
-st.write("---")
-
-# =========================================================================
-# 🧮 CÁLCULO DETALHADO DE MATERIAIS E VALORES
-# =========================================================================
-
-# 1. Tijolos
+# 2. Tijolos
 CONSUMO_TIJOLO_POR_M2 = 26
 qtd_tijolos_total = area_paredes * CONSUMO_TIJOLO_POR_M2
 milheiros_tijolo = qtd_tijolos_total / 1000.0
 custo_tijolo = milheiros_tijolo * preco_tijolo
 
-# 2. Areia, Cimento e Pedra (Estimativa por m² de parede)
+# 3. Areia, Cimento e Pedra
 metros_areia = area_paredes * 0.05
-sacos_cimento = math.ceil(area_paredes * 0.20)
+sacos_cimento_alvenaria = math.ceil(area_paredes * 0.20)
 metros_pedra = area_paredes * 0.02
 
 custo_areia = metros_areia * preco_areia
-custo_cimento_base = sacos_cimento * preco_cimento
 custo_pedra = metros_pedra * preco_pedra
 
-# 3. Vigas Baldrame e Respaudo
+# 4. Vigas Baldrame e Respaudo
 varas_baldrame = math.ceil(parede_linear / 6.0)
 custo_baldrame = varas_baldrame * mapa_precos_ferro[opt_viga_baldram]
 
 varas_respaudo = math.ceil(parede_linear / 6.0)
 custo_respaudo = varas_respaudo * mapa_precos_ferro[opt_viga_respaudo]
 
-# 4. Reboco
+# 5. Reboco
 fator_reboco = 0
 if opt_reboco == "1. Reboco em 1 Lado":
     fator_reboco = 1
@@ -373,7 +355,7 @@ area_total_reboco = area_paredes * fator_reboco
 sacos_cimento_reboco = math.ceil(area_total_reboco * 0.15)
 
 # Consolidação de Cimento e Ferragens
-sacos_cimento_total = sacos_cimento + sacos_cimento_reboco
+sacos_cimento_total = sacos_cimento_alvenaria + sacos_cimento_reboco
 custo_cimento_total = sacos_cimento_total * preco_cimento
 custo_ferragens_estrutura = custo_pilares_total + custo_baldrame + custo_respaudo
 
