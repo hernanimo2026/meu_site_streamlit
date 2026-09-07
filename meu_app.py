@@ -290,25 +290,79 @@ mapa_precos_ferro = {
     "4. Treliça H12": preco_trelica_h12
 }
 
-# 1. Tijolos e Agregados para Parede
+# =========================================================================
+# 🔩 SELEÇÃO DE PILARES/COLUNAS
+# =========================================================================
+st.subheader("🔩 Escolha dos Pilares da Obra")
+
+col_pil1, col_pil2 = st.columns(2)
+
+with col_pil1:
+    opcao_pilar = st.selectbox(
+        "Qual tipo de COLUNA PRONTA (6m) usar nos pilares?",
+        [
+            "1 - Coluna Pronta de Ferro 3/8 (Mais reforçada)",
+            "2 - Coluna Pronta de Ferro 5/16 (Mais econômica)",
+            "3 - Treliça Pronta H8/H12 (Mais leve)",
+            "4 - Não incluir colunas nos pilares (Opcional)"
+        ],
+        key="sel_opcao_pilar"
+    )
+
+with col_pil2:
+    if "4 -" not in opcao_pilar:
+        qtd_pilares = st.number_input("Quantos pilares (colunas em pé) a obra vai ter?", min_value=1, value=6, step=1, key="inp_qtd_pilares")
+        metros_pilares = qtd_pilares * altura
+        pecas_pilar_6m = math.ceil(metros_pilares / 6.0)
+    else:
+        qtd_pilares = 0
+        pecas_pilar_6m = 0.0
+
+# Definição do tipo e preço unitário da coluna
+if "1 -" in opcao_pilar:
+    tipo_pilar = "Coluna 3/8"
+    preco_pilar_un = preco_ferro_38_7x14
+elif "2 -" in opcao_pilar:
+    tipo_pilar = "Coluna 5/16"
+    preco_pilar_un = preco_ferro_516_7x14
+elif "3 -" in opcao_pilar:
+    tipo_pilar = "Treliça"
+    preco_pilar_un = preco_trelica_h8
+else:
+    tipo_pilar = "Nenhum"
+    preco_pilar_un = 0.0
+
+custo_pilares_total = pecas_pilar_6m * preco_pilar_un
+
+st.write("---")
+
+# =========================================================================
+# 🧮 CÁLCULO DETALHADO DE MATERIAIS E VALORES
+# =========================================================================
+
+# 1. Tijolos
 CONSUMO_TIJOLO_POR_M2 = 26
 qtd_tijolos_total = area_paredes * CONSUMO_TIJOLO_POR_M2
 milheiros_tijolo = qtd_tijolos_total / 1000.0
 custo_tijolo = milheiros_tijolo * preco_tijolo
 
-# 2. Cálculo de Colunas e Vigas
-qtd_colunas = math.ceil(parede_linear / distancia_colunas)
-metros_totais_colunas = qtd_colunas * altura
-varas_colunas = math.ceil(metros_totais_colunas / 6.0)
-custo_colunas = varas_colunas * mapa_precos_ferro[opt_colunas]
+# 2. Areia, Cimento e Pedra (Estimativa por m² de parede)
+metros_areia = area_paredes * 0.05
+sacos_cimento = math.ceil(area_paredes * 0.20)
+metros_pedra = area_paredes * 0.02
 
+custo_areia = metros_areia * preco_areia
+custo_cimento_base = sacos_cimento * preco_cimento
+custo_pedra = metros_pedra * preco_pedra
+
+# 3. Vigas Baldrame e Respaudo
 varas_baldrame = math.ceil(parede_linear / 6.0)
 custo_baldrame = varas_baldrame * mapa_precos_ferro[opt_viga_baldram]
 
 varas_respaudo = math.ceil(parede_linear / 6.0)
 custo_respaudo = varas_respaudo * mapa_precos_ferro[opt_viga_respaudo]
 
-# 3. Cálculo de Reboco
+# 4. Reboco
 fator_reboco = 0
 if opt_reboco == "1. Reboco em 1 Lado":
     fator_reboco = 1
@@ -316,23 +370,54 @@ elif opt_reboco == "2. Reboco em 2 Lados (Interno e Externo)":
     fator_reboco = 2
 
 area_total_reboco = area_paredes * fator_reboco
-sacos_cimento_reboco = area_total_reboco * 0.15
-custo_cimento_reboco = sacos_cimento_reboco * preco_cimento
+sacos_cimento_reboco = math.ceil(area_total_reboco * 0.15)
 
-# Fechamento Financeiro
-custo_ferragens_total = custo_colunas + custo_baldrame + custo_respaudo
-custo_materiais_total = custo_tijolo + custo_ferragens_total + custo_cimento_reboco + valor_materiais_extras
+# Consolidação de Cimento e Ferragens
+sacos_cimento_total = sacos_cimento + sacos_cimento_reboco
+custo_cimento_total = sacos_cimento_total * preco_cimento
+custo_ferragens_estrutura = custo_pilares_total + custo_baldrame + custo_respaudo
+
+# Totais Gerais
+custo_materiais_total = (
+    custo_tijolo + 
+    custo_areia + 
+    custo_cimento_total + 
+    custo_pedra + 
+    custo_ferragens_estrutura + 
+    valor_materiais_extras
+)
+
 subtotal = custo_materiais_total + valor_mao_obra + valor_servicos_extras
 total_geral = subtotal - valor_desconto
+
 # =========================================================================
-# 📋 RESUMO DO ORÇAMENTO NA TELA
+# 📋 ORÇAMENTO DETALHADO E RESUMO NA TELA
 # =========================================================================
-st.subheader("📋 Resumo do Orçamento")
+st.subheader("📋 Orçamento Detalhado de Materiais")
+
+st.markdown("### 🧱 Quantidade e Valores Individuais:")
+
+col_m1, col_m2 = st.columns(2)
+
+with col_m1:
+    st.write(f"• **Tijolos:** {int(qtd_tijolos_total)} un ({milheiros_tijolo:.2f} milheiros) → **R$ {custo_tijolo:,.2f}**")
+    st.write(f"• **Cimento Total:** {sacos_cimento_total} sacos → **R$ {custo_cimento_total:,.2f}**")
+    st.write(f"• **Areia:** {metros_areia:.2f} m³ → **R$ {custo_areia:,.2f}**")
+
+with col_m2:
+    st.write(f"• **Pedra:** {metros_pedra:.2f} m³ → **R$ {custo_pedra:,.2f}**")
+    st.write(f"• **Pilares ({tipo_pilar}):** {int(pecas_pilar_6m)} peças (6m) → **R$ {custo_pilares_total:,.2f}**")
+    st.write(f"• **Vigas (Baldrame/Respaudo):** R$ {custo_baldrame + custo_respaudo:,.2f}")
+    st.write(f"• **Reserva Materiais Extras:** **R$ {valor_materiais_extras:,.2f}**")
+
+st.write("---")
+
+st.subheader("💰 Resumo Financeiro Final")
 
 m1, m2, m3, m4 = st.columns(4)
-m1.metric("Tijolos", f"{int(qtd_tijolos_total)} un")
-m2.metric("Nº de Colunas", f"{qtd_colunas} un")
-m3.metric("Total Materiais", f"R$ {custo_materiais_total:,.2f}")
-m4.metric("TOTAL DA OBRA", f"R$ {total_geral:,.2f}")
+m1.metric("Materiais", f"R$ {custo_materiais_total:,.2f}")
+m2.metric("Mão de Obra", f"R$ {valor_mao_obra:,.2f}")
+m3.metric("Serviços Extras", f"R$ {valor_servicos_extras:,.2f}")
+m4.metric("TOTAL GERAL", f"R$ {total_geral:,.2f}")
 
-st.success(f"**Valor Final Estimado:** R$ {total_geral:,.2f}")
+st.success(f"**Valor Final Estimado da Obra (Com Desconto):** R$ {total_geral:,.2f}")
