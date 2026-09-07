@@ -148,3 +148,65 @@ with col3_dir:
     )
 
 st.write("---")
+# =========================================================================
+# 🏠 ENTRADA DE DADOS DA OBRA (Área, Paredes, etc.)
+# =========================================================================
+st.subheader("📐 Dimensões da Obra")
+area_parede = st.number_input("Área total de paredes (m²):", value=50.0, step=5.0)
+
+# =========================================================================
+# 🧮 LÓGICA DE CÁLCULO DE QUANTIDADES
+# =========================================================================
+# Índices médios de consumo por m² de parede (Alvenaria de bloco/tijolo deitado):
+CONSUMO_TIJOLO_POR_M2 = 26  # ex: 26 tijolos por m²
+CONSUMO_CIMENTO_POR_M2 = 0.2  # ex: 0.2 sacos por m² (assentamento + reboco)
+CONSUMO_AREIA_POR_M2 = 0.05   # ex: 0.05 m³ por m²
+
+# Calculando as quantidades brutas necessárias:
+qtd_tijolos_total = area_parede * CONSUMO_TIJOLO_POR_M2
+milheiros_tijolo = qtd_tijolos_total / 1000
+
+sacos_cimento_total = area_parede * CONSUMO_CIMENTO_POR_M2
+metros_areia_total = area_parede * CONSUMO_AREIA_POR_M2
+
+
+# =========================================================================
+# 💰 CÁLCULO DOS CUSTOS (Usando as variáveis do Depósito)
+# =========================================================================
+# Multiplica-se a quantidade calculada pela variável correspondente do preço:
+custo_tijolo = milheiros_tijolo * preco_tijolo
+custo_cimento = sacos_cimento_total * preco_cimento
+custo_areia = metros_areia_total * preco_areia
+
+custo_total_alvenaria = custo_tijolo + custo_cimento + custo_areia
+
+
+# =========================================================================
+# 📊 EXIBIÇÃO DOS RESULTADOS NA TELA
+# =========================================================================
+st.subheader("📋 Resumo do Orçamento de Alvenaria")
+
+col_res1, col_res2, col_res3 = st.columns(3)
+
+with col_res1:
+    st.metric(
+        label="Tijolos", 
+        value=f"{int(qtd_tijolos_total)} un", 
+        delta=f"R$ {custo_tijolo:.2f}"
+    )
+
+with col_res2:
+    st.metric(
+        label="Cimento", 
+        value=f"{sacos_cimento_total:.1f} sacos", 
+        delta=f"R$ {custo_cimento:.2f}"
+    )
+
+with col_res3:
+    st.metric(
+        label="Areia", 
+        value=f"{metros_areia_total:.2f} m³", 
+        delta=f"R$ {custo_areia:.2f}"
+    )
+
+st.success(f"**Custo Total Estimado de Alvenaria:** R$ {custo_total_alvenaria:,.2f}")
