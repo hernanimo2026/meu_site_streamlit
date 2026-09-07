@@ -150,31 +150,79 @@ with col3_dir:
 st.write("---")
 
 # =========================================================================
-# 🏠 ENTRADA DE DADOS DA OBRA (Medições e Cômodos)
+# 📐 PASSO 3: DIMENSÕES DA OBRA
 # =========================================================================
-st.subheader("📐 1. Dimensões do Cômodo e Paredes")
+st.subheader("📐 PASSO 3: DIMENSÕES DA OBRA")
 
-col_dim1, col_dim2, col_dim3 = st.columns(3)
+col_p3_1, col_p3_2 = st.columns(2)
 
-with col_dim1:
-    largura = st.number_input("Largura do Cômodo (m):", value=4.0, step=0.5, key="inp_largura")
-    comprimento = st.number_input("Comprimento do Cômodo (m):", value=5.0, step=0.5, key="inp_comprimento")
+with col_p3_1:
+    comprimento = st.number_input("Digite o comprimento da obra (em metros):", value=5.0, step=0.5, key="p3_comprimento")
 
-with col_dim2:
-    altura = st.number_input("Pé Direito / Altura da Parede (m):", value=2.80, step=0.1, key="inp_altura")
-    distancia_colunas = st.slider("Distância entre Colunas (m):", min_value=2.0, max_value=6.0, value=3.0, step=0.5, key="inp_dist_col")
+with col_p3_2:
+    largura = st.number_input("Digite a largura da obra (em metros):", value=4.0, step=0.5, key="p3_largura")
 
-with col_dim3:
-    area_piso = largura * comprimento
-    perimetro = (largura + comprimento) * 2
-    area_parede_total = perimetro * altura
-
-    st.info(f"**Área do Piso:** {area_piso:.2f} m²")
-    st.info(f"**Perímetro Linear:** {perimetro:.2f} m")
-    st.info(f"**Área Bruta de Parede:** {area_parede_total:.2f} m²")
+area_total = comprimento * largura
+st.info(f"**A área total da sua construção é de:** {area_total:.2f} m²")
 
 st.write("---")
 
+# =========================================================================
+# 🧱 PASSO 4: METRAGEM LINEAR DA PAREDE
+# =========================================================================
+st.subheader("🧱 PASSO 4: METRAGEM LINEAR DA PAREDE")
+
+st.caption("Você pode usar o perímetro automático do cômodo ou adicionar trechos individuais de parede abaixo:")
+
+usar_soma_trechos = st.checkbox("Deseja somar trechos individuais de parede (modo avançado)?", key="chk_trechos")
+
+if usar_soma_trechos:
+    num_trechos = st.number_input("Quantos trechos de parede deseja somar?", min_value=1, max_value=20, value=4, step=1, key="num_trechos")
+    
+    parede_linear = 0.0
+    cols_trechos = st.columns(min(int(num_trechos), 4))
+    
+    for i in range(int(num_trechos)):
+        col_idx = i % 4
+        with cols_trechos[col_idx]:
+            trecho = st.number_input(f"Trecho {i+1} (m):", value=4.0 if i%2==0 else 5.0, step=0.5, key=f"trecho_{i}")
+            parede_linear += trecho
+else:
+    parede_linear = (comprimento + largura) * 2
+
+st.success(f"**Total acumulado de paredes:** {parede_linear:.2f} metros lineares.")
+
+st.write("---")
+
+# =========================================================================
+# 📏 PASSO 5: ALTURA PERSONALIZADA (OPCIONAL)
+# =========================================================================
+st.subheader("📏 PASSO 5: ALTURA PERSONALIZADA (OPCIONAL)")
+
+if "seletor_obra" in st.session_state and "Muros" in st.session_state["seletor_obra"]:
+    sugestao = 2.00
+    st.write("Para **Muro**, a altura sugerida é de **2.00m**.")
+else:
+    sugestao = 3.00
+    st.write("Para **Casa/Barracão**, a altura sugerida é de **3.00m** (considere platibandas/oitões).")
+
+usar_sugerida = st.radio(
+    "Como deseja definir a altura da parede?",
+    ["Usar altura sugerida", "Digitar altura personalizada"],
+    key="rad_altura"
+)
+
+if usar_sugerida == "Usar altura sugerida":
+    altura = sugestao
+else:
+    altura = st.number_input("Digite a altura personalizada (em metros):", value=sugestao, step=0.10, key="p5_altura_custom")
+
+area_paredes = parede_linear * altura
+
+st.info(f"**Altura definida:** {altura:.2f} metros.")
+st.success(f"**A área total das paredes é de:** {area_paredes:.2f} m²")
+
+st.write("---")
 # =========================================================================
 # ⚙️ OPÇÕES CONSTRUTIVAS (Estruturas e Reboco)
 # =========================================================================
@@ -230,6 +278,9 @@ st.write("---")
 # 🧮 LÓGICA DE CÁLCULO E INTEGRAÇÃO DE PREÇOS
 # =========================================================================
 
+# Distância padrão de colunas (caso não tenha sido informada acima)
+distancia_colunas = 3.0
+
 # Dicionário mapeando a seleção do usuário para o preço vindo do depósito
 mapa_precos_ferro = {
     "0. Sem Ferragem": 0.0,
@@ -241,20 +292,20 @@ mapa_precos_ferro = {
 
 # 1. Tijolos e Agregados para Parede
 CONSUMO_TIJOLO_POR_M2 = 26
-qtd_tijolos_total = area_parede_total * CONSUMO_TIJOLO_POR_M2
+qtd_tijolos_total = area_paredes * CONSUMO_TIJOLO_POR_M2
 milheiros_tijolo = qtd_tijolos_total / 1000.0
 custo_tijolo = milheiros_tijolo * preco_tijolo
 
 # 2. Cálculo de Colunas e Vigas
-qtd_colunas = math.ceil(perimetro / distancia_colunas)
+qtd_colunas = math.ceil(parede_linear / distancia_colunas)
 metros_totais_colunas = qtd_colunas * altura
 varas_colunas = math.ceil(metros_totais_colunas / 6.0)
 custo_colunas = varas_colunas * mapa_precos_ferro[opt_colunas]
 
-varas_baldrame = math.ceil(perimetro / 6.0)
+varas_baldrame = math.ceil(parede_linear / 6.0)
 custo_baldrame = varas_baldrame * mapa_precos_ferro[opt_viga_baldram]
 
-varas_respaudo = math.ceil(perimetro / 6.0)
+varas_respaudo = math.ceil(parede_linear / 6.0)
 custo_respaudo = varas_respaudo * mapa_precos_ferro[opt_viga_respaudo]
 
 # 3. Cálculo de Reboco
@@ -264,7 +315,7 @@ if opt_reboco == "1. Reboco em 1 Lado":
 elif opt_reboco == "2. Reboco em 2 Lados (Interno e Externo)":
     fator_reboco = 2
 
-area_total_reboco = area_parede_total * fator_reboco
+area_total_reboco = area_paredes * fator_reboco
 sacos_cimento_reboco = area_total_reboco * 0.15
 custo_cimento_reboco = sacos_cimento_reboco * preco_cimento
 
@@ -273,7 +324,6 @@ custo_ferragens_total = custo_colunas + custo_baldrame + custo_respaudo
 custo_materiais_total = custo_tijolo + custo_ferragens_total + custo_cimento_reboco + valor_materiais_extras
 subtotal = custo_materiais_total + valor_mao_obra + valor_servicos_extras
 total_geral = subtotal - valor_desconto
-
 # =========================================================================
 # 📋 RESUMO DO ORÇAMENTO NA TELA
 # =========================================================================
