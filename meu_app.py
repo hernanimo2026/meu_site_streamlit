@@ -24,7 +24,7 @@ with col2_dir:
         key="seletor_chat"
     )
     if opcao_chat == "💬 Abrir Chat de Negociação":
-        st.link_button("Ir para o WhatsApp do Pedreiro", "https://wa.me+91+991211780")
+        st.link_button("Ir para o WhatsApp do Pedreiro", "https://wa.me+091+991211780")
         
 st.write(" ")  # Pequeno espaço entre as linhas
     
