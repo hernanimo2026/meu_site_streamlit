@@ -154,10 +154,10 @@ st.subheader("📐 PASSO 3: DIMENSÕES DA OBRA")
 col_p3_1, col_p3_2 = st.columns(2)
 
 with col_p3_1:
-    comprimento = st.number_input("Digite o comprimento da obra (em metros):", value=5.0, step=0.5, key="p3_comprimento")
+    comprimento = st.number_input("Digite o comprimento da obra (em metros):", value=9.0, step=0.5, key="p3_comprimento")
 
 with col_p3_2:
-    largura = st.number_input("Digite a largura da obra (em metros):", value=4.0, step=0.5, key="p3_largura")
+    largura = st.number_input("Digite a largura da obra (em metros):", value=7.0, step=0.5, key="p3_largura")
 
 area_total = comprimento * largura
 st.info(f"**A área total da sua construção é de:** {area_total:.2f} m²")
@@ -174,15 +174,15 @@ st.caption("Você pode usar o perímetro automático do cômodo ou adicionar tre
 usar_soma_trechos = st.checkbox("Deseja somar trechos individuais de parede (modo avançado)?", key="chk_trechos")
 
 if usar_soma_trechos:
-    num_trechos = st.number_input("Quantos trechos de parede deseja somar?", min_value=1, max_value=20, value=4, step=1, key="num_trechos")
+    num_trechos = st.number_input("Quantos trechos de parede deseja somar?", min_value=1, max_value=20, value=7, step=1, key="num_trechos")
     
     parede_linear = 0.0
-    cols_trechos = st.columns(min(int(num_trechos), 4))
+    cols_trechos = st.columns(min(int(num_trechos), 7))
     
     for i in range(int(num_trechos)):
         col_idx = i % 4
         with cols_trechos[col_idx]:
-            trecho = st.number_input(f"Trecho {i+1} (m):", value=4.0 if i%2==0 else 5.0, step=0.5, key=f"trecho_{i}")
+            trecho = st.number_input(f"Trecho {i+1} (m):", value=7.0 if i%2==0 else 8.0, step=0.5, key=f"trecho_{i}")
             parede_linear += trecho
 else:
     parede_linear = (comprimento + largura) * 2
@@ -200,7 +200,7 @@ if "Muros" in tipo_obra:
     sugestao = 2.00
     st.write("Para **Muro**, a altura sugerida é de **2.00m**.")
 else:
-    sugestao = 3.00
+    sugestao = 3.30
     st.write("Para **Casa/Barracão**, a altura sugerida é de **3.00m** (considere platibandas/oitões).")
 
 usar_sugerida = st.radio(
@@ -291,7 +291,7 @@ st.subheader("💰 3. Valores Financeiros e Serviços")
 col_fin1, col_fin2 = st.columns(2)
 
 with col_fin1:
-    valor_mao_obra = st.number_input("Mão de Obra Total (R$):", value=2500.0, step=100.0, key="inp_mo")
+    valor_mao_obra = st.number_input("Mão de Obra Total (R$):", value=500.0, step=100.0, key="inp_mo")
     valor_servicos_extras = st.number_input("Serviços Extras (R$):", value=500.0, step=50.0, key="inp_extras_serv")
 
 with col_fin2:
