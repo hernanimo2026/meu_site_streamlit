@@ -14,18 +14,12 @@ st.set_page_config(
 LINK_DA_SUA_IMAGEM = "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=600" 
 
 st.markdown(f"""
-    <head>
-        <!-- Título no WhatsApp -->
+    <div style="display: none;">
         <meta property="og:title" content="🧮 Calculadora do Pedreiro | Orçamentos Rápidos" />
-        
-        <!-- Descrição no WhatsApp -->
         <meta property="og:description" content="Gere orçamentos precisos para casas, muros e contrapisos em poucos segundos!" />
-        
-        <!-- Imagem de capa no WhatsApp -->
         <meta property="og:image" content="{LINK_DA_SUA_IMAGEM}" />
-        
         <meta property="og:type" content="website" />
-    </head>
+    </div>
 """, unsafe_allow_html=True)
 # Estilização visual para o botão do WhatsApp
 st.markdown("""
