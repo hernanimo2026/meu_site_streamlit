@@ -79,18 +79,19 @@ st.subheader("🗣️ 1. O que o cliente deseja construir?")
 
 descricao_cliente = st.text_input(
     "Descrição simples da obra:",
-    value="Orçamento de uma casa de 63m² com 4 cômodos e uma área de circulação",
+    value="Orçamento de uma casa de 63m² com 4 cômodos, área de circulação e muro de fechamento",
     key="desc_cliente"
 )
 
-col_f1, col_f2 = st.columns(2)
+col_f1, col_f2, col_f3 = st.columns(3)
 
 with col_f1:
-    area_construcao = st.number_input("Área Total da Construção (m²):", value=63.0, step=1.0, key="f_area")
-    qtd_comodos = st.number_input("Quantidade de Cômodos/Divisões:", value=4, step=1, key="f_comodos")
+    st.markdown("**🏠 Estrutura da Casa:**")
+    area_construcao = st.number_input("Área Total da Casa (m²):", value=63.0, step=1.0, key="f_area")
+    qtd_comodos = st.number_input("Quantidade de Cômodos:", value=4, step=1, key="f_comodos")
     
     opcao_reboco = st.selectbox(
-        "🧱 Acabamento de Reboco/Massa:",
+        "🧱 Reboco da Casa:",
         [
             "2 Lados (Interno e Externo Completo)",
             "1 Lado (Apenas Interno ou Externo)",
@@ -100,8 +101,9 @@ with col_f1:
     )
 
 with col_f2:
+    st.markdown("**💪 Reforço e Telhado:**")
     nivel_reforco = st.selectbox(
-        "💪 Qual o tipo/reforço da construção?",
+        "Qual o tipo/reforço da construção?",
         [
             "1. Mais Reforçada (Estrutura Pesada / Ferro 3/8)",
             "2. Reforçada (Padrão Comercial / Ferro 3/8)",
@@ -114,7 +116,7 @@ with col_f2:
     )
 
     tipo_telhado = st.selectbox(
-        "🏠 Tipo de Telhado:",
+        "Tipo de Telhado:",
         [
             "Telhado Embutido com Platibanda (Fibrocimento / Sanduíche)",
             "Telhado Aparente com Beiral (Fibrocimento / Sanduíche)",
@@ -126,13 +128,25 @@ with col_f2:
     
     if "Sem Cobertura" not in tipo_telhado:
         qtd_caidas = st.selectbox(
-            "📐 Quantidade de Caídas (Quedas d'água):",
+            "Quantidade de Caídas:",
             ["1 Caída", "2 Caídas", "3 Caídas", "4 Caídas", "5 Caídas", "6 ou mais Caídas"],
             index=1,
             key="sel_caidas"
         )
     else:
         qtd_caidas = "Nenhuma"
+
+with col_f3:
+    st.markdown("**🧱 Muro de Fechamento (Opcional):**")
+    incluir_muro = st.checkbox("Incluir Muro no Orçamento?", value=True, key="chk_muro")
+    if incluir_muro:
+        metros_muro = st.number_input("Comprimento do Muro (Metros):", value=30.0, step=1.0, key="m_muro_m")
+        altura_muro = st.number_input("Altura do Muro (Metros):", value=2.0, step=0.1, key="m_muro_h")
+        rebocar_muro = st.checkbox("Rebocar Muro (2 Lados)?", value=False, key="chk_reb_muro")
+    else:
+        metros_muro = 0.0
+        altura_muro = 0.0
+        rebocar_muro = False
 
 st.write("---")
 
@@ -144,8 +158,12 @@ st.subheader("💰 2. Valoração do Serviço e Mão de Obra")
 col_v1, col_v2, col_v3 = st.columns(3)
 
 with col_v1:
-    valor_m2_mao_obra = st.number_input("Valor da Mão de Obra por m² (R$):", value=350.0, step=10.0, key="v_mo_m2")
-    valor_mao_obra_total = area_construcao * valor_m2_mao_obra
+    valor_m2_mao_obra = st.number_input("Mão de Obra Casa (R$/m²):", value=350.0, step=10.0, key="v_mo_m2")
+    valor_metro_muro_mo = st.number_input("Mão de Obra Muro (R$/Metro Linear):", value=120.0, step=10.0, key="v_mo_muro") if incluir_muro else 0.0
+    
+    valor_mao_obra_casa = area_construcao * valor_m2_mao_obra
+    valor_mao_obra_muro = metros_muro * valor_metro_muro_mo
+    valor_mao_obra_total = valor_mao_obra_casa + valor_mao_obra_muro
     st.caption(f"Mão de obra calculada: **R$ {valor_mao_obra_total:,.2f}**")
 
 with col_v2:
@@ -161,32 +179,38 @@ st.write("---")
 # 🧮 CÁLCULOS TÉCNICOS AUTOMÁTICOS
 # =========================================================================
 
-# Geometria estimada
+# --- 1. CASA ---
 perimetro_estimado = (math.sqrt(area_construcao) * 4) + (qtd_comodos * 3.5)
 altura_padrao = 3.0
-area_paredes = perimetro_estimado * altura_padrao
+area_paredes_casa = perimetro_estimado * altura_padrao
 
-# Alvenaria
-qtd_tijolos = area_paredes * 26
+# --- 2. MURO ---
+area_paredes_muro = metros_muro * altura_muro if incluir_muro else 0.0
+
+# --- 3. TIJOLOS ---
+area_paredes_total = area_paredes_casa + area_paredes_muro
+qtd_tijolos = area_paredes_total * 26
 milheiros_tijolos = qtd_tijolos / 1000.0
 custo_tijolos = milheiros_tijolos * preco_tijolo
 
-# Reboco e Cimento
-fator_reboco = 2.0 if "2 Lados" in opcao_reboco else (1.0 if "1 Lado" in opcao_reboco else 0.0)
-area_reboco_total = area_paredes * fator_reboco
+# --- 4. REBOCO E CIMENTO ---
+fator_reboco_casa = 2.0 if "2 Lados" in opcao_reboco else (1.0 if "1 Lado" in opcao_reboco else 0.0)
+area_reboco_casa = area_paredes_casa * fator_reboco_casa
+area_reboco_muro = (area_paredes_muro * 2.0) if (incluir_muro and rebocar_muro) else 0.0
+area_reboco_total = area_reboco_casa + area_reboco_muro
 
-sacos_cimento_assentamento = math.ceil(area_paredes * 0.20)
+sacos_cimento_assentamento = math.ceil(area_paredes_total * 0.20)
 sacos_cimento_reboco = math.ceil(area_reboco_total * 0.15)
 sacos_cimento_total = sacos_cimento_assentamento + sacos_cimento_reboco
 custo_cimento = sacos_cimento_total * preco_cimento
 
-metros_areia = (area_paredes * 0.04) + (area_reboco_total * 0.025)
+metros_areia = (area_paredes_total * 0.04) + (area_reboco_total * 0.025)
 custo_areia = metros_areia * preco_areia
 
-metros_pedra = area_construcao * 0.08
+metros_pedra = (area_construcao * 0.08) + (metros_muro * 0.03 if incluir_muro else 0.0)
 custo_pedra = metros_pedra * preco_pedra
 
-# Ferragens
+# --- 5. FERRAGENS (CASA + MURO) ---
 if "1." in nivel_reforco or "2." in nivel_reforco or "3." in nivel_reforco:
     preco_ferro_usado = preco_ferro_38
     nome_ferro = "Coluna/Viga 3/8\""
@@ -197,24 +221,23 @@ else:
     preco_ferro_usado = preco_trelica_h8
     nome_ferro = "Treliça H8"
 
-qtd_varas_ferro = math.ceil((perimetro_estimado * 3) / 6.0)
+varas_ferro_casa = math.ceil((perimetro_estimado * 3) / 6.0)
+# Muro precisa de colunas a cada 2.5 metros
+colunas_muro = math.ceil(metros_muro / 2.5) if incluir_muro else 0
+varas_ferro_muro = math.ceil((colunas_muro * altura_muro) / 6.0) if incluir_muro else 0
+qtd_varas_ferro = varas_ferro_casa + varas_ferro_muro
 custo_ferragens = qtd_varas_ferro * preco_ferro_usado
 
-# =========================================================================
-# 🪵 REGRA ESPECÍFICA DO MADEIRAMENTO (VIGAS 2m / CAIBROS 1m)
-# =========================================================================
-lado_estimado = math.sqrt(area_construcao)  # Ex: 63m² ≈ 7.94m x 7.94m
+# --- 6. MADEIRAMENTO E TELHADO ---
 fator_caida_num = int(qtd_caidas[0]) if qtd_caidas[0].isdigit() else 2
 
 if "Fibrocimento / Sanduíche" in tipo_telhado:
     area_telhado = area_construcao * (1.10 if "Aparente" in tipo_telhado else 1.0)
     lado_telhado = math.sqrt(area_telhado)
     
-    # Vigas a cada 2.0 metros no sentido da água
     num_linhas_vigas = math.ceil(lado_telhado / 2.0) + 1
     metros_vigas_madeira = num_linhas_vigas * lado_telhado * (1.0 + (fator_caida_num * 0.04))
     
-    # Caibros/Terças a cada 1.0 metro no sentido cruzado
     num_linhas_caibros = math.ceil(lado_telhado / 1.0) + 1
     metros_caibros_madeira = num_linhas_caibros * lado_telhado * (1.0 + (fator_caida_num * 0.04))
     
@@ -230,7 +253,6 @@ elif "Tradicional Aparente" in tipo_telhado:
     milheiros_telha_cer = (area_telhado * 30) / 1000.0
     custo_telhas = milheiros_telha_cer * preco_telha_ceramica
     
-    # Telhado cerâmico tradicional usa ripas/caibros bem mais próximos (0.5m)
     metros_vigas_madeira = (lado_telhado / 1.5 + 1) * lado_telhado
     metros_caibros_madeira = (lado_telhado / 0.5 + 1) * lado_telhado
 else:
@@ -258,19 +280,20 @@ st.info(f"**Pedido do Cliente:** {descricao_cliente}")
 col_r1, col_r2 = st.columns(2)
 
 with col_r1:
-    st.markdown("### 🧱 Alvenaria e Acabamento:")
-    st.write(f"• **Tijolos:** {int(qtd_tijolos)} un ({milheiros_tijolos:.2f} milheiros) → **R$ {custo_tijolos:,.2f}**")
-    st.write(f"• **Opção de Reboco:** {opcao_reboco}")
+    st.markdown("### 🧱 Alvenaria e Acabamento (Casa + Muro):")
+    st.write(f"• **Tijolos Totais:** {int(qtd_tijolos)} un ({milheiros_tijolos:.2f} milheiros) → **R$ {custo_tijolos:,.2f}**")
+    if incluir_muro:
+        st.write(f"• **Muro Incluso:** {metros_muro:.1f} m de comprimento x {altura_muro:.1f} m de altura")
     st.write(f"• **Cimento Total:** {sacos_cimento_total} sacos → **R$ {custo_cimento:,.2f}**")
-    st.write(f"• **Areia:** {metros_areia:.2f} m³ → **R$ {custo_areia:,.2f}**")
-    st.write(f"• **Pedra:** {metros_pedra:.2f} m³ → **R$ {custo_pedra:,.2f}**")
+    st.write(f"• **Areia Total:** {metros_areia:.2f} m³ → **R$ {custo_areia:,.2f}**")
+    st.write(f"• **Pedra Total:** {metros_pedra:.2f} m³ → **R$ {custo_pedra:,.2f}**")
 
 with col_r2:
-    st.markdown("### 🪵 Estrutura e Madeiramento do Telhado:")
-    st.write(f"• **Ferragens ({nome_ferro}):** {qtd_varas_ferro} varas (6m) → **R$ {custo_ferragens:,.2f}**")
+    st.markdown("### 🪵 Estrutura e Cobertura:")
+    st.write(f"• **Ferragens Casa + Muro ({nome_ferro}):** {qtd_varas_ferro} varas (6m) → **R$ {custo_ferragens:,.2f}**")
     st.write(f"• **Telhas / Cobertura:** R$ {custo_telhas:,.2f}")
-    st.write(f"• **Vigas (Espaçamento de 2,0m no caimento):** {metros_vigas_madeira:.1f} m → **R$ {custo_vigas:,.2f}**")
-    st.write(f"• **Caibros/Terças (Espaçamento de 1,0m cruzado):** {metros_caibros_madeira:.1f} m → **R$ {custo_caibros:,.2f}**")
+    st.write(f"• **Vigas (Espaçamento 2m):** {metros_vigas_madeira:.1f} m → **R$ {custo_vigas:,.2f}**")
+    st.write(f"• **Caibros/Terças (Espaçamento 1m):** {metros_caibros_madeira:.1f} m → **R$ {custo_caibros:,.2f}**")
     st.write(f"• **Reserva Materiais Extras:** **R$ {reserva_materiais:,.2f}**")
 
 st.write("---")
