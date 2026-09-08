@@ -103,7 +103,7 @@ with col_f1:
 with col_f2:
     st.markdown("**💪 Reforço e Telhado:**")
     nivel_reforco = st.selectbox(
-        "Qual o tipo/reforço da construção?",
+        "Qual o tipo/reforço da construção da Casa?",
         [
             "1. Mais Reforçada (Estrutura Pesada / Ferro 3/8)",
             "2. Reforçada (Padrão Comercial / Ferro 3/8)",
@@ -142,6 +142,7 @@ with col_f3:
     if incluir_muro:
         metros_muro = st.number_input("Comprimento do Muro (Metros):", value=30.0, step=1.0, key="m_muro_m")
         altura_muro = st.number_input("Altura do Muro (Metros):", value=2.0, step=0.1, key="m_muro_h")
+        
         opcao_reboco_muro = st.selectbox(
             "Reboco do Muro:",
             [
@@ -152,10 +153,22 @@ with col_f3:
             index=1,
             key="sel_reb_muro"
         )
+        
+        tipo_ferro_muro = st.selectbox(
+            "Ferragem Estrutural do Muro:",
+            [
+                "Treliça H8 (Padrão / Econômico)",
+                "Coluna Ferro 5/16\"",
+                "Coluna Ferro 3/8\""
+            ],
+            index=0,
+            key="sel_ferro_muro"
+        )
     else:
         metros_muro = 0.0
         altura_muro = 0.0
         opcao_reboco_muro = "Sem Reboco"
+        tipo_ferro_muro = "Treliça H8"
 
 st.write("---")
 
@@ -188,16 +201,16 @@ st.write("---")
 # 🧮 CÁLCULOS TÉCNICOS SEPARADOS (CASA vs MURO)
 # =========================================================================
 
-# --- A. FERRAGENS ---
+# --- A. FERRAGEM DA CASA ---
 if "1." in nivel_reforco or "2." in nivel_reforco or "3." in nivel_reforco:
-    preco_ferro_usado = preco_ferro_38
-    nome_ferro = "Coluna/Viga 3/8\""
+    preco_ferro_casa_usado = preco_ferro_38
+    nome_ferro_casa = "Coluna/Viga 3/8\""
 elif "4." in nivel_reforco:
-    preco_ferro_usado = preco_ferro_516
-    nome_ferro = "Coluna/Viga 5/16\""
+    preco_ferro_casa_usado = preco_ferro_516
+    nome_ferro_casa = "Coluna/Viga 5/16\""
 else:
-    preco_ferro_usado = preco_trelica_h8
-    nome_ferro = "Treliça H8"
+    preco_ferro_casa_usado = preco_trelica_h8
+    nome_ferro_casa = "Treliça H8"
 
 # --- B. MATERIAIS DA CASA ---
 perimetro_casa = (math.sqrt(area_construcao) * 4) + (qtd_comodos * 3.5)
@@ -220,9 +233,9 @@ pedra_casa = area_construcao * 0.08
 custo_pedra_casa = pedra_casa * preco_pedra
 
 varas_ferro_casa = math.ceil((perimetro_casa * 3) / 6.0)
-custo_ferro_casa = varas_ferro_casa * preco_ferro_usado
+custo_ferro_casa = varas_ferro_casa * preco_ferro_casa_usado
 
-# Madeiramento e Telhado
+# Cobertura
 fator_caida_num = int(qtd_caidas[0]) if qtd_caidas[0].isdigit() else 2
 
 if "Fibrocimento / Sanduíche" in tipo_telhado:
@@ -261,7 +274,7 @@ custo_cobertura_casa = custo_telhas + custo_vigas + custo_caibros
 total_materiais_casa = custo_tijolos_casa + custo_cimento_casa + custo_areia_casa + custo_pedra_casa + custo_ferro_casa + custo_cobertura_casa
 total_geral_casa = total_materiais_casa + valor_mao_obra_casa
 
-# --- C. MATERIAIS DO MURO ---
+# --- C. MATERIAIS DO MURO (COM VIGA BALDRAME, RESPALDO E COLUNAS A CADA 3M) ---
 if incluir_muro:
     area_paredes_muro = metros_muro * altura_muro
     qtd_tijolos_muro = area_paredes_muro * 26
@@ -277,12 +290,30 @@ if incluir_muro:
     areia_muro = (area_paredes_muro * 0.04) + (area_reb_muro * 0.025)
     custo_areia_muro = areia_muro * preco_areia
 
-    pedra_muro = metros_muro * 0.03
+    pedra_muro = metros_muro * 0.04  # Pedra para baldrame e vigas
     custo_pedra_muro = pedra_muro * preco_pedra
 
-    colunas_muro = math.ceil(metros_muro / 2.5)
-    varas_ferro_muro = math.ceil((colunas_muro * altura_muro) / 6.0)
-    custo_ferro_muro = varas_ferro_muro * preco_ferro_usado
+    # CÁLCULO DE FERRAGEM DO MURO:
+    # 1. Viga Baldrame = metros_muro
+    # 2. Viga de Respaldo = metros_muro
+    # 3. Colunas a cada 3.0m (com engaste na fundação) = (num_colunas * (altura + 0.5m))
+    num_colunas_muro = math.ceil(metros_muro / 3.0) + 1
+    metros_colunas_muro = num_colunas_muro * (altura_muro + 0.5)
+    
+    metros_totais_ferro_muro = metros_muro + metros_muro + metros_colunas_muro
+    varas_ferro_muro = math.ceil(metros_totais_ferro_muro / 6.0)
+
+    if "Treliça" in tipo_ferro_muro:
+        preco_ferro_muro_usado = preco_trelica_h8
+        nome_ferro_muro = "Treliça H8"
+    elif "5/16" in tipo_ferro_muro:
+        preco_ferro_muro_usado = preco_ferro_516
+        nome_ferro_muro = "Coluna 5/16\""
+    else:
+        preco_ferro_muro_usado = preco_ferro_38
+        nome_ferro_muro = "Coluna 3/8\""
+
+    custo_ferro_muro = varas_ferro_muro * preco_ferro_muro_usado
 
     total_materiais_muro = custo_tijolos_muro + custo_cimento_muro + custo_areia_muro + custo_pedra_muro + custo_ferro_muro
     total_geral_muro = total_materiais_muro + valor_mao_obra_muro
@@ -291,6 +322,9 @@ else:
     total_geral_muro = 0.0
     qtd_tijolos_muro = 0
     sacos_cimento_muro = 0
+    varas_ferro_muro = 0
+    nome_ferro_muro = "Nenhum"
+    num_colunas_muro = 0
 
 # Totais Combinados
 total_materiais_geral = total_materiais_casa + total_materiais_muro + reserva_materiais
@@ -311,17 +345,18 @@ with col_r1:
     st.write(f"• **Tijolos:** {int(qtd_tijolos_casa)} un → **R$ {custo_tijolos_casa:,.2f}**")
     st.write(f"• **Cimento:** {sacos_cimento_casa} sacos → **R$ {custo_cimento_casa:,.2f}**")
     st.write(f"• **Areia:** {areia_casa:.2f} m³ | **Pedra:** {pedra_casa:.2f} m³ → **R$ {(custo_areia_casa + custo_pedra_casa):,.2f}**")
-    st.write(f"• **Ferragens Casa:** {varas_ferro_casa} varas (6m) → **R$ {custo_ferro_casa:,.2f}**")
+    st.write(f"• **Ferragens Casa ({nome_ferro_casa}):** {varas_ferro_casa} varas (6m) → **R$ {custo_ferro_casa:,.2f}**")
     st.write(f"• **Cobertura/Madeiramento:** **R$ {custo_cobertura_casa:,.2f}**")
 
 with col_r2:
     if incluir_muro:
-        st.markdown("### 🧱 Materiais do Muro de Fechamento:")
+        st.markdown("### 🧱 Materiais do Muro (Com Baldrame + Respaldo):")
         st.write(f"• **Dimensões:** {metros_muro:.1f}m compr. x {altura_muro:.1f}m alt. ({opcao_reboco_muro})")
+        st.write(f"• **Estrutura:** Baldrame + Respaldo + {num_colunas_muro} Colunas (a cada ~3m)")
         st.write(f"• **Tijolos:** {int(qtd_tijolos_muro)} un → **R$ {custo_tijolos_muro:,.2f}**")
         st.write(f"• **Cimento Muro:** {sacos_cimento_muro} sacos → **R$ {custo_cimento_muro:,.2f}**")
         st.write(f"• **Areia + Pedra Muro:** **R$ {(custo_areia_muro + custo_pedra_muro):,.2f}**")
-        st.write(f"• **Ferragens Muro:** {varas_ferro_muro} varas (6m) → **R$ {custo_ferro_muro:,.2f}**")
+        st.write(f"• **Ferragem Muro ({nome_ferro_muro}):** {varas_ferro_muro} varas (6m) → **R$ {custo_ferro_muro:,.2f}**")
     else:
         st.markdown("### 🧱 Muro de Fechamento:")
         st.write("• Muro não incluso neste orçamento.")
