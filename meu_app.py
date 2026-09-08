@@ -1,18 +1,17 @@
 import math
 import streamlit as st
 
-# Configuração da página
+# 1. Configuração da página
 st.set_page_config(
     page_title="Calculadora do Pedreiro",
     page_icon="🧮",
     layout="wide"
 )
 
-# -------------------------------------------------------------------------
-# 📱 PERSONALIZAÇÃO DO CARD DO WHATSAPP
-# -------------------------------------------------------------------------
-LINK_DA_SUA_IMAGEM = "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=600" 
+# 2. Link da foto de prévia do WhatsApp
+LINK_DA_SUA_IMAGEM = "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?w=600"
 
+# 3. Metatags Open Graph para redes sociais
 st.markdown(f"""
     <div style="display: none;">
         <meta property="og:title" content="🧮 Calculadora do Pedreiro | Orçamentos Rápidos" />
@@ -21,7 +20,8 @@ st.markdown(f"""
         <meta property="og:type" content="website" />
     </div>
 """, unsafe_allow_html=True)
-# Estilização visual para o botão do WhatsApp
+
+# 4. Estilização do botão do WhatsApp
 st.markdown("""
 <style>
     .stLinkButton > button {
@@ -36,7 +36,6 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
 # =========================================================================
 # 🧱 LINHA 1: TÍTULO E BOTÃO WHATSAPP
 # =========================================================================
