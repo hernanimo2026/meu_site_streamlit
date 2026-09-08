@@ -54,7 +54,7 @@ with st.expander("🏪 Preços dos Materiais no Depósito (Clique para ajustar o
         preco_tijolo = st.number_input("Milheiro de Tijolo (R$):", value=1300.0, step=50.0, key="p_tijolo")
         preco_cimento = st.number_input("Saco de Cimento 50kg (R$):", value=50.0, step=1.0, key="p_cimento")
         preco_areia = st.number_input("Metro de Areia (R$):", value=180.0, step=5.0, key="p_areia")
-        preco_pedra = st.number_input("Metro de Pedra (R$):", value=240.0, step=5.0, key="p_pedra")
+        preco_pedra = st.number_input("Metro de Pedra/Brita (R$):", value=240.0, step=5.0, key="p_pedra")
 
     with col_dep2:
         st.markdown("**⛓️ Ferragens (Varas de 6m):**") 
@@ -79,14 +79,14 @@ st.subheader("🗣️ 1. O que o cliente deseja construir?")
 
 descricao_cliente = st.text_input(
     "Descrição simples da obra:",
-    value="Orçamento de uma casa de 63m² com 4 cômodos, área de circulação e muro de fechamento",
+    value="Orçamento de uma casa de 63m² com 4 cômodos, contrapiso, área de circulação e muro de fechamento",
     key="desc_cliente"
 )
 
 col_f1, col_f2, col_f3 = st.columns(3)
 
 with col_f1:
-    st.markdown("**🏠 Estrutura da Casa:**")
+    st.markdown("**🏠 Estrutura e Piso da Casa:**")
     area_construcao = st.number_input("Área Total da Casa (m²):", value=63.0, step=1.0, key="f_area")
     qtd_comodos = st.number_input("Quantidade de Cômodos:", value=4, step=1, key="f_comodos")
     
@@ -98,6 +98,17 @@ with col_f1:
             "Sem Reboco (Tijolo Aparente / Sem Massa)"
         ],
         key="sel_reboco_simples"
+    )
+
+    opcao_contrapiso = st.selectbox(
+        "📐 Contrapiso / Base da Casa:",
+        [
+            "Contrapiso Padrão (5 cm)",
+            "Contrapiso Reforçado (7 cm)",
+            "Sem Contrapiso"
+        ],
+        index=0,
+        key="sel_contrapiso"
     )
 
 with col_f2:
@@ -181,9 +192,10 @@ col_v1, col_v2, col_v3 = st.columns(3)
 
 with col_v1:
     valor_m2_mao_obra = st.number_input("Mão de Obra Casa (R$/m²):", value=350.0, step=10.0, key="v_mo_m2")
+    valor_m2_contrapiso_mo = st.number_input("Mão de Obra Contrapiso Extra (R$/m² - Zerar se incluso):", value=0.0, step=5.0, key="v_mo_cp")
     valor_metro_muro_mo = st.number_input("Mão de Obra Muro (R$/Metro Linear):", value=120.0, step=10.0, key="v_mo_muro") if incluir_muro else 0.0
     
-    valor_mao_obra_casa = area_construcao * valor_m2_mao_obra
+    valor_mao_obra_casa = (area_construcao * valor_m2_mao_obra) + (area_construcao * valor_m2_contrapiso_mo if "Sem" not in opcao_contrapiso else 0.0)
     valor_mao_obra_muro = metros_muro * valor_metro_muro_mo
     valor_mao_obra_total = valor_mao_obra_casa + valor_mao_obra_muro
     st.caption(f"Mão de obra Casa: **R$ {valor_mao_obra_casa:,.2f}** | Muro: **R$ {valor_mao_obra_muro:,.2f}**")
@@ -223,13 +235,28 @@ custo_tijolos_casa = milheiros_tijolos_casa * preco_tijolo
 fator_reb_casa = 2.0 if "2 Lados" in opcao_reboco else (1.0 if "1 Lado" in opcao_reboco else 0.0)
 area_reb_casa = area_paredes_casa * fator_reb_casa
 
-sacos_cimento_casa = math.ceil((area_paredes_casa * 0.20) + (area_reb_casa * 0.15))
+# CÁLCULO DO CONTRAPISO
+if "5 cm" in opcao_contrapiso:
+    espessura_cp = 0.05
+    sacos_cimento_cp = math.ceil(area_construcao * 0.35)
+elif "7 cm" in opcao_contrapiso:
+    espessura_cp = 0.07
+    sacos_cimento_cp = math.ceil(area_construcao * 0.50)
+else:
+    espessura_cp = 0.0
+    sacos_cimento_cp = 0
+
+areia_cp = area_construcao * espessura_cp * 0.60
+pedra_cp = area_construcao * espessura_cp * 0.60
+
+# Total Alvenaria + Contrapiso Casa
+sacos_cimento_casa = math.ceil((area_paredes_casa * 0.20) + (area_reb_casa * 0.15)) + sacos_cimento_cp
 custo_cimento_casa = sacos_cimento_casa * preco_cimento
 
-areia_casa = (area_paredes_casa * 0.04) + (area_reb_casa * 0.025)
+areia_casa = (area_paredes_casa * 0.04) + (area_reb_casa * 0.025) + areia_cp
 custo_areia_casa = areia_casa * preco_areia
 
-pedra_casa = area_construcao * 0.08
+pedra_casa = (area_construcao * 0.08) + pedra_cp
 custo_pedra_casa = pedra_casa * preco_pedra
 
 varas_ferro_casa = math.ceil((perimetro_casa * 3) / 6.0)
@@ -274,7 +301,7 @@ custo_cobertura_casa = custo_telhas + custo_vigas + custo_caibros
 total_materiais_casa = custo_tijolos_casa + custo_cimento_casa + custo_areia_casa + custo_pedra_casa + custo_ferro_casa + custo_cobertura_casa
 total_geral_casa = total_materiais_casa + valor_mao_obra_casa
 
-# --- C. MATERIAIS DO MURO (COM VIGA BALDRAME, RESPALDO E COLUNAS A CADA 3M) ---
+# --- C. MATERIAIS DO MURO (COM BALDRAME, RESPALDO E COLUNAS A CADA 3M) ---
 if incluir_muro:
     area_paredes_muro = metros_muro * altura_muro
     qtd_tijolos_muro = area_paredes_muro * 26
@@ -290,13 +317,9 @@ if incluir_muro:
     areia_muro = (area_paredes_muro * 0.04) + (area_reb_muro * 0.025)
     custo_areia_muro = areia_muro * preco_areia
 
-    pedra_muro = metros_muro * 0.04  # Pedra para baldrame e vigas
+    pedra_muro = metros_muro * 0.04
     custo_pedra_muro = pedra_muro * preco_pedra
 
-    # CÁLCULO DE FERRAGEM DO MURO:
-    # 1. Viga Baldrame = metros_muro
-    # 2. Viga de Respaldo = metros_muro
-    # 3. Colunas a cada 3.0m (com engaste na fundação) = (num_colunas * (altura + 0.5m))
     num_colunas_muro = math.ceil(metros_muro / 3.0) + 1
     metros_colunas_muro = num_colunas_muro * (altura_muro + 0.5)
     
@@ -341,10 +364,11 @@ st.info(f"**Pedido do Cliente:** {descricao_cliente}")
 col_r1, col_r2 = st.columns(2)
 
 with col_r1:
-    st.markdown("### 🏠 Materiais da Casa:")
+    st.markdown("### 🏠 Materiais da Casa (Inclui Contrapiso):")
+    st.write(f"• **Contrapiso Incluso:** {opcao_contrapiso} ({area_construcao:.0f} m²)")
     st.write(f"• **Tijolos:** {int(qtd_tijolos_casa)} un → **R$ {custo_tijolos_casa:,.2f}**")
-    st.write(f"• **Cimento:** {sacos_cimento_casa} sacos → **R$ {custo_cimento_casa:,.2f}**")
-    st.write(f"• **Areia:** {areia_casa:.2f} m³ | **Pedra:** {pedra_casa:.2f} m³ → **R$ {(custo_areia_casa + custo_pedra_casa):,.2f}**")
+    st.write(f"• **Cimento (Alvenaria + Contrapiso):** {sacos_cimento_casa} sacos → **R$ {custo_cimento_casa:,.2f}**")
+    st.write(f"• **Areia Total:** {areia_casa:.2f} m³ | **Pedra/Brita:** {pedra_casa:.2f} m³ → **R$ {(custo_areia_casa + custo_pedra_casa):,.2f}**")
     st.write(f"• **Ferragens Casa ({nome_ferro_casa}):** {varas_ferro_casa} varas (6m) → **R$ {custo_ferro_casa:,.2f}**")
     st.write(f"• **Cobertura/Madeiramento:** **R$ {custo_cobertura_casa:,.2f}**")
 
@@ -372,7 +396,7 @@ col_sub1, col_sub2, col_sub3 = st.columns(3)
 
 with col_sub1:
     st.markdown("#### 🏠 TOTAL DA CASA")
-    st.write(f"• Materiais: R$ {total_materiais_casa:,.2f}")
+    st.write(f"• Materiais (Estrutura + Piso): R$ {total_materiais_casa:,.2f}")
     st.write(f"• Mão de Obra: R$ {valor_mao_obra_casa:,.2f}")
     st.markdown(f"**Subtotal Casa: R$ {total_geral_casa:,.2f}**")
 
