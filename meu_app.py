@@ -182,7 +182,7 @@ if usar_soma_trechos:
     for i in range(int(num_trechos)):
         col_idx = i % 4
         with cols_trechos[col_idx]:
-            trecho = st.number_input(f"Trecho {i+1} (m):", value=7.0 if i%2==0 else 8.0, step=0.5, key=f"trecho_{i}")
+            trecho = st.number_input(f"Trecho {i+1} (m):", value=7.0 if i%2==0 else 9.0, step=0.5, key=f"trecho_{i}")
             parede_linear += trecho
 else:
     parede_linear = (comprimento + largura) * 2
