@@ -142,11 +142,20 @@ with col_f3:
     if incluir_muro:
         metros_muro = st.number_input("Comprimento do Muro (Metros):", value=30.0, step=1.0, key="m_muro_m")
         altura_muro = st.number_input("Altura do Muro (Metros):", value=2.0, step=0.1, key="m_muro_h")
-        rebocar_muro = st.checkbox("Rebocar Muro (2 Lados)?", value=False, key="chk_reb_muro")
+        opcao_reboco_muro = st.selectbox(
+            "Reboco do Muro:",
+            [
+                "Sem Reboco (Tijolo Aparente)",
+                "Rebocar 1 Lado",
+                "Rebocar 2 Lados"
+            ],
+            index=1,
+            key="sel_reb_muro"
+        )
     else:
         metros_muro = 0.0
         altura_muro = 0.0
-        rebocar_muro = False
+        opcao_reboco_muro = "Sem Reboco"
 
 st.write("---")
 
@@ -164,7 +173,7 @@ with col_v1:
     valor_mao_obra_casa = area_construcao * valor_m2_mao_obra
     valor_mao_obra_muro = metros_muro * valor_metro_muro_mo
     valor_mao_obra_total = valor_mao_obra_casa + valor_mao_obra_muro
-    st.caption(f"Mão de obra calculada: **R$ {valor_mao_obra_total:,.2f}**")
+    st.caption(f"Mão de obra Casa: **R$ {valor_mao_obra_casa:,.2f}** | Muro: **R$ {valor_mao_obra_muro:,.2f}**")
 
 with col_v2:
     valor_servicos_extras = st.number_input("Serviços Extras / Acabamento (R$):", value=1000.0, step=100.0, key="v_extras_serv")
@@ -176,41 +185,10 @@ with col_v3:
 st.write("---")
 
 # =========================================================================
-# 🧮 CÁLCULOS TÉCNICOS AUTOMÁTICOS
+# 🧮 CÁLCULOS TÉCNICOS SEPARADOS (CASA vs MURO)
 # =========================================================================
 
-# --- 1. CASA ---
-perimetro_estimado = (math.sqrt(area_construcao) * 4) + (qtd_comodos * 3.5)
-altura_padrao = 3.0
-area_paredes_casa = perimetro_estimado * altura_padrao
-
-# --- 2. MURO ---
-area_paredes_muro = metros_muro * altura_muro if incluir_muro else 0.0
-
-# --- 3. TIJOLOS ---
-area_paredes_total = area_paredes_casa + area_paredes_muro
-qtd_tijolos = area_paredes_total * 26
-milheiros_tijolos = qtd_tijolos / 1000.0
-custo_tijolos = milheiros_tijolos * preco_tijolo
-
-# --- 4. REBOCO E CIMENTO ---
-fator_reboco_casa = 2.0 if "2 Lados" in opcao_reboco else (1.0 if "1 Lado" in opcao_reboco else 0.0)
-area_reboco_casa = area_paredes_casa * fator_reboco_casa
-area_reboco_muro = (area_paredes_muro * 2.0) if (incluir_muro and rebocar_muro) else 0.0
-area_reboco_total = area_reboco_casa + area_reboco_muro
-
-sacos_cimento_assentamento = math.ceil(area_paredes_total * 0.20)
-sacos_cimento_reboco = math.ceil(area_reboco_total * 0.15)
-sacos_cimento_total = sacos_cimento_assentamento + sacos_cimento_reboco
-custo_cimento = sacos_cimento_total * preco_cimento
-
-metros_areia = (area_paredes_total * 0.04) + (area_reboco_total * 0.025)
-custo_areia = metros_areia * preco_areia
-
-metros_pedra = (area_construcao * 0.08) + (metros_muro * 0.03 if incluir_muro else 0.0)
-custo_pedra = metros_pedra * preco_pedra
-
-# --- 5. FERRAGENS (CASA + MURO) ---
+# --- A. FERRAGENS ---
 if "1." in nivel_reforco or "2." in nivel_reforco or "3." in nivel_reforco:
     preco_ferro_usado = preco_ferro_38
     nome_ferro = "Coluna/Viga 3/8\""
@@ -221,14 +199,30 @@ else:
     preco_ferro_usado = preco_trelica_h8
     nome_ferro = "Treliça H8"
 
-varas_ferro_casa = math.ceil((perimetro_estimado * 3) / 6.0)
-# Muro precisa de colunas a cada 2.5 metros
-colunas_muro = math.ceil(metros_muro / 2.5) if incluir_muro else 0
-varas_ferro_muro = math.ceil((colunas_muro * altura_muro) / 6.0) if incluir_muro else 0
-qtd_varas_ferro = varas_ferro_casa + varas_ferro_muro
-custo_ferragens = qtd_varas_ferro * preco_ferro_usado
+# --- B. MATERIAIS DA CASA ---
+perimetro_casa = (math.sqrt(area_construcao) * 4) + (qtd_comodos * 3.5)
+area_paredes_casa = perimetro_casa * 3.0
 
-# --- 6. MADEIRAMENTO E TELHADO ---
+qtd_tijolos_casa = area_paredes_casa * 26
+milheiros_tijolos_casa = qtd_tijolos_casa / 1000.0
+custo_tijolos_casa = milheiros_tijolos_casa * preco_tijolo
+
+fator_reb_casa = 2.0 if "2 Lados" in opcao_reboco else (1.0 if "1 Lado" in opcao_reboco else 0.0)
+area_reb_casa = area_paredes_casa * fator_reb_casa
+
+sacos_cimento_casa = math.ceil((area_paredes_casa * 0.20) + (area_reb_casa * 0.15))
+custo_cimento_casa = sacos_cimento_casa * preco_cimento
+
+areia_casa = (area_paredes_casa * 0.04) + (area_reb_casa * 0.025)
+custo_areia_casa = areia_casa * preco_areia
+
+pedra_casa = area_construcao * 0.08
+custo_pedra_casa = pedra_casa * preco_pedra
+
+varas_ferro_casa = math.ceil((perimetro_casa * 3) / 6.0)
+custo_ferro_casa = varas_ferro_casa * preco_ferro_usado
+
+# Madeiramento e Telhado
 fator_caida_num = int(qtd_caidas[0]) if qtd_caidas[0].isdigit() else 2
 
 if "Fibrocimento / Sanduíche" in tipo_telhado:
@@ -262,13 +256,46 @@ else:
 
 custo_vigas = metros_vigas_madeira * preco_viga_madeira_m
 custo_caibros = metros_caibros_madeira * preco_caibro_m
-custo_madeira_total = custo_vigas + custo_caibros
-custo_cobertura_total = custo_telhas + custo_madeira_total
+custo_cobertura_casa = custo_telhas + custo_vigas + custo_caibros
 
-# Totais
-total_materiais = custo_tijolos + custo_cimento + custo_areia + custo_pedra + custo_ferragens + custo_cobertura_total + reserva_materiais
-subtotal = total_materiais + valor_mao_obra_total + valor_servicos_extras
-total_geral = subtotal - desconto
+total_materiais_casa = custo_tijolos_casa + custo_cimento_casa + custo_areia_casa + custo_pedra_casa + custo_ferro_casa + custo_cobertura_casa
+total_geral_casa = total_materiais_casa + valor_mao_obra_casa
+
+# --- C. MATERIAIS DO MURO ---
+if incluir_muro:
+    area_paredes_muro = metros_muro * altura_muro
+    qtd_tijolos_muro = area_paredes_muro * 26
+    milheiros_tijolos_muro = qtd_tijolos_muro / 1000.0
+    custo_tijolos_muro = milheiros_tijolos_muro * preco_tijolo
+
+    fator_reb_muro = 2.0 if "2 Lados" in opcao_reboco_muro else (1.0 if "1 Lado" in opcao_reboco_muro else 0.0)
+    area_reb_muro = area_paredes_muro * fator_reb_muro
+
+    sacos_cimento_muro = math.ceil((area_paredes_muro * 0.20) + (area_reb_muro * 0.15))
+    custo_cimento_muro = sacos_cimento_muro * preco_cimento
+
+    areia_muro = (area_paredes_muro * 0.04) + (area_reb_muro * 0.025)
+    custo_areia_muro = areia_muro * preco_areia
+
+    pedra_muro = metros_muro * 0.03
+    custo_pedra_muro = pedra_muro * preco_pedra
+
+    colunas_muro = math.ceil(metros_muro / 2.5)
+    varas_ferro_muro = math.ceil((colunas_muro * altura_muro) / 6.0)
+    custo_ferro_muro = varas_ferro_muro * preco_ferro_usado
+
+    total_materiais_muro = custo_tijolos_muro + custo_cimento_muro + custo_areia_muro + custo_pedra_muro + custo_ferro_muro
+    total_geral_muro = total_materiais_muro + valor_mao_obra_muro
+else:
+    total_materiais_muro = 0.0
+    total_geral_muro = 0.0
+    qtd_tijolos_muro = 0
+    sacos_cimento_muro = 0
+
+# Totais Combinados
+total_materiais_geral = total_materiais_casa + total_materiais_muro + reserva_materiais
+subtotal_obra = total_materiais_geral + valor_mao_obra_total + valor_servicos_extras
+total_geral_final = subtotal_obra - desconto
 
 # =========================================================================
 # 📋 RESUMO DO ORÇAMENTO
@@ -280,30 +307,53 @@ st.info(f"**Pedido do Cliente:** {descricao_cliente}")
 col_r1, col_r2 = st.columns(2)
 
 with col_r1:
-    st.markdown("### 🧱 Alvenaria e Acabamento (Casa + Muro):")
-    st.write(f"• **Tijolos Totais:** {int(qtd_tijolos)} un ({milheiros_tijolos:.2f} milheiros) → **R$ {custo_tijolos:,.2f}**")
-    if incluir_muro:
-        st.write(f"• **Muro Incluso:** {metros_muro:.1f} m de comprimento x {altura_muro:.1f} m de altura")
-    st.write(f"• **Cimento Total:** {sacos_cimento_total} sacos → **R$ {custo_cimento:,.2f}**")
-    st.write(f"• **Areia Total:** {metros_areia:.2f} m³ → **R$ {custo_areia:,.2f}**")
-    st.write(f"• **Pedra Total:** {metros_pedra:.2f} m³ → **R$ {custo_pedra:,.2f}**")
+    st.markdown("### 🏠 Materiais da Casa:")
+    st.write(f"• **Tijolos:** {int(qtd_tijolos_casa)} un → **R$ {custo_tijolos_casa:,.2f}**")
+    st.write(f"• **Cimento:** {sacos_cimento_casa} sacos → **R$ {custo_cimento_casa:,.2f}**")
+    st.write(f"• **Areia:** {areia_casa:.2f} m³ | **Pedra:** {pedra_casa:.2f} m³ → **R$ {(custo_areia_casa + custo_pedra_casa):,.2f}**")
+    st.write(f"• **Ferragens Casa:** {varas_ferro_casa} varas (6m) → **R$ {custo_ferro_casa:,.2f}**")
+    st.write(f"• **Cobertura/Madeiramento:** **R$ {custo_cobertura_casa:,.2f}**")
 
 with col_r2:
-    st.markdown("### 🪵 Estrutura e Cobertura:")
-    st.write(f"• **Ferragens Casa + Muro ({nome_ferro}):** {qtd_varas_ferro} varas (6m) → **R$ {custo_ferragens:,.2f}**")
-    st.write(f"• **Telhas / Cobertura:** R$ {custo_telhas:,.2f}")
-    st.write(f"• **Vigas (Espaçamento 2m):** {metros_vigas_madeira:.1f} m → **R$ {custo_vigas:,.2f}**")
-    st.write(f"• **Caibros/Terças (Espaçamento 1m):** {metros_caibros_madeira:.1f} m → **R$ {custo_caibros:,.2f}**")
-    st.write(f"• **Reserva Materiais Extras:** **R$ {reserva_materiais:,.2f}**")
+    if incluir_muro:
+        st.markdown("### 🧱 Materiais do Muro de Fechamento:")
+        st.write(f"• **Dimensões:** {metros_muro:.1f}m compr. x {altura_muro:.1f}m alt. ({opcao_reboco_muro})")
+        st.write(f"• **Tijolos:** {int(qtd_tijolos_muro)} un → **R$ {custo_tijolos_muro:,.2f}**")
+        st.write(f"• **Cimento Muro:** {sacos_cimento_muro} sacos → **R$ {custo_cimento_muro:,.2f}**")
+        st.write(f"• **Areia + Pedra Muro:** **R$ {(custo_areia_muro + custo_pedra_muro):,.2f}**")
+        st.write(f"• **Ferragens Muro:** {varas_ferro_muro} varas (6m) → **R$ {custo_ferro_muro:,.2f}**")
+    else:
+        st.markdown("### 🧱 Muro de Fechamento:")
+        st.write("• Muro não incluso neste orçamento.")
 
 st.write("---")
 
-st.subheader("💰 Resumo Financeiro da Obra")
+# =========================================================================
+# 💰 DETALHAMENTO FINANCEIRO DIVIDIDO
+# =========================================================================
+st.subheader("💰 Divisão dos Valores (Casa vs Muro)")
 
-m1, m2, m3, m4 = st.columns(4)
-m1.metric("Total de Materiais", f"R$ {total_materiais:,.2f}")
-m2.metric("Mão de Obra Total", f"R$ {valor_mao_obra_total:,.2f}")
-m3.metric("Serviços Extras", f"R$ {valor_servicos_extras:,.2f}")
-m4.metric("TOTAL DA OBRA", f"R$ {total_geral:,.2f}")
+col_sub1, col_sub2, col_sub3 = st.columns(3)
 
-st.success(f"✅ **VALOR FINAL ESTIMADO PARA O CLIENTE:** R$ {total_geral:,.2f}")
+with col_sub1:
+    st.markdown("#### 🏠 TOTAL DA CASA")
+    st.write(f"• Materiais: R$ {total_materiais_casa:,.2f}")
+    st.write(f"• Mão de Obra: R$ {valor_mao_obra_casa:,.2f}")
+    st.markdown(f"**Subtotal Casa: R$ {total_geral_casa:,.2f}**")
+
+with col_sub2:
+    if incluir_muro:
+        st.markdown("#### 🧱 TOTAL DO MURO")
+        st.write(f"• Materiais: R$ {total_materiais_muro:,.2f}")
+        st.write(f"• Mão de Obra: R$ {valor_mao_obra_muro:,.2f}")
+        st.markdown(f"**Subtotal Muro: R$ {total_geral_muro:,.2f}**")
+
+with col_sub3:
+    st.markdown("#### 🛠️ EXTRAS E DESCONTOS")
+    st.write(f"• Serviços Extras: R$ {valor_servicos_extras:,.2f}")
+    st.write(f"• Reserva Materiais: R$ {reserva_materiais:,.2f}")
+    st.write(f"• Desconto: - R$ {desconto:,.2f}")
+
+st.write("---")
+
+st.success(f"✅ **VALOR TOTAL GERAL DA OBRA:** R$ {total_geral_final:,.2f}")
