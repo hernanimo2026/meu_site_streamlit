@@ -62,20 +62,20 @@ with col3_esq:
         
         # --- ⛓️ 2. FERRAGENS E AÇO ---
         st.markdown("**⛓️ Ferragens e Estrutura (Varas de 6m):**") 
-        preco_ferro_38_7x20 = st.number_input("Coluna/Viga 3/8 7x20 (R$):", value=150.0, step=2.0, key="p_f_38_7x20")
+        preco_ferro_38_7x20 = st.number_input("Coluna/Viga 3/8 7x20 (R$):", value=130.0, step=2.0, key="p_f_38_7x20")
         preco_ferro_38_7x14 = st.number_input("Coluna/Viga 3/8 7x14 (R$):", value=130.0, step=2.0, key="p_f_38_7x14")
-        preco_ferro_516_7x14 = st.number_input("Coluna/Viga 5/16 7x14 (R$):", value=110.0, step=2.0, key="p_f_516_7x14")
-        preco_viga_516_7x20 = st.number_input("Coluna/Viga 5/16 7x20 (R$):", value=100.0, step=2.0, key="p_v_516_7x20")
+        preco_ferro_516_7x14 = st.number_input("Coluna/Viga 5/16 7x14 (R$):", value=65.0, step=2.0, key="p_f_516_7x14")
+        preco_viga_516_7x20 = st.number_input("Coluna/Viga 5/16 7x20 (R$):", value=85.0, step=2.0, key="p_v_516_7x20")
         preco_trelica_h8 = st.number_input("Treliça H8 Padrão (R$):", value=32.0, step=1.0, key="p_t_h8")
         preco_trelica_h12 = st.number_input("Treliça H12 Padrão (R$):", value=45.0, step=1.0, key="p_t_h12")
         preco_malha_pop = st.number_input("Malha Pop de Aço 15x15 (R$):", value=110.0, step=5.0, key="p_malha")
         
         # --- 🔩 3. FIXADORES METÁLICOS E BARRAS ROSCADAS ---
         st.markdown("**🔩 Barras Roscadas e Fixação:**")
-        preco_barra_rosca_38 = st.number_input("Barra de Rosca Sem Fim 3/8 (Unidade R$):", value=10.0, step=1.0, key="p_br_38")
-        preco_barra_rosca_516 = st.number_input("Barra de Rosca Sem Fim 5/16 (Unidade R$):", value=8.0, step=1.0, key="p_br_516")
-        preco_conjunto_fix_38 = st.number_input("Conjunto Porca + Arruela 3/8 (Cento R$):", value=1.0, step=2.0, key="p_conj_38")
-        preco_conjunto_fix_516 = st.number_input("Conjunto Porca + Arruela 5/16 (Cento R$):", value=0.8, step=2.0, key="p_conj_516")
+        preco_barra_rosca_38 = st.number_input("Barra de Rosca Sem Fim 3/8 (Unidade R$):", value=22.0, step=1.0, key="p_br_38")
+        preco_barra_rosca_516 = st.number_input("Barra de Rosca Sem Fim 5/16 (Unidade R$):", value=18.0, step=1.0, key="p_br_516")
+        preco_conjunto_fix_38 = st.number_input("Conjunto Porca + Arruela 3/8 (Cento R$):", value=35.0, step=2.0, key="p_conj_38")
+        preco_conjunto_fix_516 = st.number_input("Conjunto Porca + Arruela 5/16 (Cento R$):", value=28.0, step=2.0, key="p_conj_516")
         preco_parafuso_telha_unidade = st.number_input("Parafuso Autobrocante para Telha (Unidade R$):", value=0.50, step=0.05, key="p_paraf_telha_un")
 
         # --- 🪵 4. MADEIRAS E FORMAS ---
@@ -93,14 +93,14 @@ with col3_esq:
         st.markdown("**🔧 Pregos, Arames e Consumíveis:**")
         preco_prego = st.number_input("Preço do kg do Prego 18x27 (R$):", value=22.0, step=1.0, key="p_prego")
         preco_arame = st.number_input("Preço do kg do Arame Recozido (R$):", value=24.0, step=1.0, key="p_arame")
-        preco_argamassa_ac1 = st.number_input("Argamassa AC-I 20kg (R$):", value=24.0, step=1.0, key="p_ac1")
+        preco_argamassa_ac1 = st.number_input("Argamassa AC-I 20kg (R$):", value=18.0, step=1.0, key="p_ac1")
         preco_cola_tubo = st.number_input("Adesivo Plástico/Cola p/ Tubo 175g (R$):", value=15.5, step=1.0, key="p_cola")
         preco_lixa_massa = st.number_input("Lixa d'Água / Ferro (Unidade R$):", value=2.5, step=0.5, key="p_lixa")
         
         # --- 💧 6. HIDRÁULICA E ESGOTO ---
         st.markdown("**💧 Hidráulica e Conexões de Água (3/4\" / 25mm e 50mm):**")
-        preco_cano_agua_50 = st.number_input("Cano de Água 50mm / Barra 6m (R$):", value=88.0, step=2.0, key="p_c_ag_50")
-        preco_cano_agua_25 = st.number_input("Cano de Água 25mm (3/4\") / Barra 6m (R$):", value=52.5, step=1.0, key="p_c_ag_25")
+        preco_cano_agua_50 = st.number_input("Cano de Água 50mm / Barra 6m (R$):", value=48.0, step=2.0, key="p_c_ag_50")
+        preco_cano_agua_25 = st.number_input("Cano de Água 25mm (3/4\") / Barra 6m (R$):", value=19.5, step=1.0, key="p_c_ag_25")
         preco_registro_agua = st.number_input("Registro de Gaveta/Geral 3/4\" (Unidade R$):", value=45.0, step=2.0, key="p_registro")
         preco_registro_chuveiro = st.number_input("Registro de Pressão (Chuveiro) 3/4\" (Unidade R$):", value=55.0, step=2.0, key="p_reg_chuveiro")
         
@@ -154,10 +154,10 @@ st.subheader("📐 PASSO 3: DIMENSÕES DA OBRA")
 col_p3_1, col_p3_2 = st.columns(2)
 
 with col_p3_1:
-    comprimento = st.number_input("Digite o comprimento da obra (em metros):", value=9.0, step=0.5, key="p3_comprimento")
+    comprimento = st.number_input("Digite o comprimento da obra (em metros):", value=5.0, step=0.5, key="p3_comprimento")
 
 with col_p3_2:
-    largura = st.number_input("Digite a largura da obra (em metros):", value=7.0, step=0.5, key="p3_largura")
+    largura = st.number_input("Digite a largura da obra (em metros):", value=4.0, step=0.5, key="p3_largura")
 
 area_total = comprimento * largura
 st.info(f"**A área total da sua construção é de:** {area_total:.2f} m²")
@@ -174,15 +174,15 @@ st.caption("Você pode usar o perímetro automático do cômodo ou adicionar tre
 usar_soma_trechos = st.checkbox("Deseja somar trechos individuais de parede (modo avançado)?", key="chk_trechos")
 
 if usar_soma_trechos:
-    num_trechos = st.number_input("Quantos trechos de parede deseja somar?", min_value=1, max_value=20, value=8, step=1, key="num_trechos")
+    num_trechos = st.number_input("Quantos trechos de parede deseja somar?", min_value=1, max_value=20, value=4, step=1, key="num_trechos")
     
     parede_linear = 0.0
-    cols_trechos = st.columns(min(int(num_trechos), 8))
+    cols_trechos = st.columns(min(int(num_trechos), 4))
     
     for i in range(int(num_trechos)):
         col_idx = i % 4
         with cols_trechos[col_idx]:
-            trecho = st.number_input(f"Trecho {i+1} (m):", value=7.0 if i%2==0 else 9.0, step=0.5, key=f"trecho_{i}")
+            trecho = st.number_input(f"Trecho {i+1} (m):", value=4.0 if i%2==0 else 5.0, step=0.5, key=f"trecho_{i}")
             parede_linear += trecho
 else:
     parede_linear = (comprimento + largura) * 2
@@ -200,7 +200,7 @@ if "Muros" in tipo_obra:
     sugestao = 2.00
     st.write("Para **Muro**, a altura sugerida é de **2.00m**.")
 else:
-    sugestao = 3.30
+    sugestao = 3.00
     st.write("Para **Casa/Barracão**, a altura sugerida é de **3.00m** (considere platibandas/oitões).")
 
 usar_sugerida = st.radio(
@@ -222,7 +222,7 @@ st.success(f"**A área total das paredes é de:** {area_paredes:.2f} m²")
 st.write("---")
 
 # =========================================================================
-# ⚙️ 2. ESCOLHA DE ESTRUTURAS E ACABAMENTOS (COM PILARES INTEGRADOS)
+# ⚙️ 2. ESCOLHA DE ESTRUTURAS E ACABAMENTOS (COM PILARES INTEGRADOS E VERGAS)
 # =========================================================================
 st.subheader("⚙️ 2. Escolha de Estruturas e Acabamentos")
 
@@ -248,6 +248,18 @@ with col_op1:
     opt_viga_respaudo = st.selectbox("Viga de Respaudo:", opcoes_ferragem, index=1, key="sel_viga_resp")
     opt_vergas = st.selectbox("Vergas / Contra-vergas:", opcoes_ferragem, index=2, key="sel_vergas")
     
+    if "0. Sem" not in opt_vergas:
+        qtd_portas_janelas = st.number_input(
+            "Quantidade de aberturas (Portas e Janelas):",
+            min_value=1,
+            value=3,
+            step=1,
+            key="inp_qtd_aberturas",
+            help="Usado para calcular a quantidade necessária de vergas e contra-vergas."
+        )
+    else:
+        qtd_portas_janelas = 0
+
     st.markdown("**🏛️ Pilares (Colunas em pé):**")
     opcao_pilar = st.selectbox(
         "Qual tipo de COLUNA PRONTA (6m) usar nos pilares?",
@@ -279,7 +291,7 @@ st.subheader("💰 3. Valores Financeiros e Serviços")
 col_fin1, col_fin2 = st.columns(2)
 
 with col_fin1:
-    valor_mao_obra = st.number_input("Mão de Obra Total (R$):", value=500.0, step=100.0, key="inp_mo")
+    valor_mao_obra = st.number_input("Mão de Obra Total (R$):", value=2500.0, step=100.0, key="inp_mo")
     valor_servicos_extras = st.number_input("Serviços Extras (R$):", value=500.0, step=50.0, key="inp_extras_serv")
 
 with col_fin2:
@@ -337,12 +349,17 @@ metros_pedra = area_paredes * 0.02
 custo_areia = metros_areia * preco_areia
 custo_pedra = metros_pedra * preco_pedra
 
-# 4. Vigas Baldrame e Respaudo
+# 4. Vigas Baldrame, Respaudo e Vergas/Contravergas
 varas_baldrame = math.ceil(parede_linear / 6.0)
 custo_baldrame = varas_baldrame * mapa_precos_ferro[opt_viga_baldram]
 
 varas_respaudo = math.ceil(parede_linear / 6.0)
 custo_respaudo = varas_respaudo * mapa_precos_ferro[opt_viga_respaudo]
+
+# Estimativa: Cada abertura consome cerca de 1.80m por peça (verga + contraverga = 3.6m por abertura)
+metros_vergas_totais = qtd_portas_janelas * 3.6
+varas_vergas = math.ceil(metros_vergas_totais / 6.0) if "0. Sem" not in opt_vergas else 0
+custo_vergas = varas_vergas * mapa_precos_ferro[opt_vergas]
 
 # 5. Reboco
 fator_reboco = 0
@@ -357,7 +374,7 @@ sacos_cimento_reboco = math.ceil(area_total_reboco * 0.15)
 # Consolidação de Cimento e Ferragens
 sacos_cimento_total = sacos_cimento_alvenaria + sacos_cimento_reboco
 custo_cimento_total = sacos_cimento_total * preco_cimento
-custo_ferragens_estrutura = custo_pilares_total + custo_baldrame + custo_respaudo
+custo_ferragens_estrutura = custo_pilares_total + custo_baldrame + custo_respaudo + custo_vergas
 
 # Totais Gerais
 custo_materiais_total = (
@@ -385,6 +402,7 @@ with col_m1:
     st.write(f"• **Tijolos:** {int(qtd_tijolos_total)} un ({milheiros_tijolo:.2f} milheiros) → **R$ {custo_tijolo:,.2f}**")
     st.write(f"• **Cimento Total:** {sacos_cimento_total} sacos → **R$ {custo_cimento_total:,.2f}**")
     st.write(f"• **Areia:** {metros_areia:.2f} m³ → **R$ {custo_areia:,.2f}**")
+    st.write(f"• **Vergas / Contra-vergas:** {varas_vergas} varas (6m) → **R$ {custo_vergas:,.2f}**")
 
 with col_m2:
     st.write(f"• **Pedra:** {metros_pedra:.2f} m³ → **R$ {custo_pedra:,.2f}**")
