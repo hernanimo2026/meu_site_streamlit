@@ -49,7 +49,7 @@ with col2_esq:
 
 with col2_dir:
     st.link_button(
-        "⚠️ WhatsApp do pedreiro", 
+        "⚠️ WhatsApp", 
         "https://wa.me/5591991211780?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento."
     )
 
