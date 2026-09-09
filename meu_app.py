@@ -46,12 +46,11 @@ col2_esq, col2_dir = st.columns(2)
 with col2_esq:
     st.write("Sistemas de Orçamentos Rápidos — Serviços Gerais")
     st.write("Mensagem do dia: ***Deus seja louvado!***")
-    st.write("**Anucios? [Clique aqui] ()**")
-    
+    st.write("Anucios geral? [Clique aqui] (https://drive.google.com/file/d/1TwMMnZSFWPhi6jwG7oV5P2SWibTsEr9_/view?usp=drive_link)**")
+
 with col2_dir:
-    st.link_button(
-        "⚠️ WhatsApp", 
-        "https://wa.me/5591991211780?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento."
+
+     st.link_button("⚠️ WhatsApp", "https://wa.me/5591991211780?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento."
     )
 
 # =========================================================================
