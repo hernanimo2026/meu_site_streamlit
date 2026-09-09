@@ -46,7 +46,7 @@ col2_esq, col2_dir = st.columns(2)
 with col2_esq:
     st.write("Sistemas de Orçamentos Rápidos — Serviços Gerais")
     st.write("Mensagem do dia: ***Deus seja louvado!***")
-    st.write("Anucios! [**Clique aqui**]  (https://drive.google.com/file/d/1J_W1uD78018UqgCo1L2aULdPxU_OF4lh/view?usp=sharing)")
+    st.write("Anucios em **GERAL**! [Clique aqui]  (https://drive.google.com/file/d/1J_W1uD78018UqgCo1L2aULdPxU_OF4lh/view?usp=sharing)")
 
 with col2_dir:
 
