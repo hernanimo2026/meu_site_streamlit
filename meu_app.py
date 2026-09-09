@@ -281,7 +281,7 @@ custo_areia_casa = areia_casa * preco_areia
 pedra_casa = (area_construcao * 0.08) + pedra_cp
 custo_pedra_casa = pedra_casa * preco_pedra
 
-varas_ferro_casa = math.ceil((perimetro_casa * 3) / 6.0)
+varas_ferro_casa = math.ceil(((perimetro_casa * 3) / 6.0) * fator_consumo_ferro)
 custo_ferro_casa = varas_ferro_casa * preco_ferro_casa_usado
 
 # Cobertura
