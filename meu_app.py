@@ -45,7 +45,7 @@ st.caption("⚠️ O programa está em fase de teste e pode conter erros.")
 col2_esq, col2_dir = st.columns(2)
 with col2_esq:
     st.write("Sistemas de Orçamentos Rápidos — Serviços Gerais")
-    st.write("Mensagem do dia: ***Deus seja louvado***")
+    st.write("Mensagem do dia: ***Deus seja louvado!***")
 
 with col2_dir:
     st.link_button(
