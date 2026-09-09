@@ -70,7 +70,7 @@ with st.expander("🏪 Preços dos Materiais no Depósito (Clique para ajustar o
 
     with col_dep2:
         st.markdown("**⛓️ Ferragens (Varas de 6m):**") 
-        preco_ferro_38 = st.number_input("Coluna/Viga 3/8 (R$):", value=130.0, step=2.0, key="p_f_38")
+        preco_ferro_38 = st.number_input("Coluna/Viga 3/8 (R$):", value=170.0, step=2.0, key="p_f_38")
         preco_ferro_516 = st.number_input("Coluna/Viga 5/16 (R$):", value=100.0, step=2.0, key="p_f_516")
         preco_trelica_h8 = st.number_input("Treliça H8 (R$):", value=35.0, step=1.0, key="p_t_h8")
 
