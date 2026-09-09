@@ -46,7 +46,8 @@ col2_esq, col2_dir = st.columns(2)
 with col2_esq:
     st.write("Sistemas de Orçamentos Rápidos — Serviços Gerais")
     st.write("Mensagem do dia: ***Deus seja louvado!***")
-
+    st.write("**Anucios? [Clique aqui] ()**")
+    
 with col2_dir:
     st.link_button(
         "⚠️ WhatsApp", 
