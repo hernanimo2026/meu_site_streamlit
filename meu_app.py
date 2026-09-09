@@ -226,16 +226,26 @@ st.write("---")
 # =========================================================================
 
 # --- A. FERRAGEM DA CASA ---
-if "1." in nivel_reforco or "2." in nivel_reforco or "3." in nivel_reforco:
+if "1." in nivel_reforco:
+    fator_consumo_ferro = 1.30
     preco_ferro_casa_usado = preco_ferro_38
-    nome_ferro_casa = "Coluna/Viga 3/8\""
+    nome_ferro_casa = "Coluna/Viga 3/8\" (Estrutura Pesada)"
+elif "2." in nivel_reforco:
+    fator_consumo_ferro = 1.00
+    preco_ferro_casa_usado = preco_ferro_38
+    nome_ferro_casa = "Coluna/Viga 3/8\" (Padrão Comercial)"
+elif "3." in nivel_reforco:
+    fator_consumo_ferro = 0.85
+    preco_ferro_casa_usado = preco_ferro_38
+    nome_ferro_casa = "Coluna/Viga 3/8\" (Padrão Residencial)"
 elif "4." in nivel_reforco:
+    fator_consumo_ferro = 1.00
     preco_ferro_casa_usado = preco_ferro_516
     nome_ferro_casa = "Coluna/Viga 5/16\""
 else:
+    fator_consumo_ferro = 1.00
     preco_ferro_casa_usado = preco_trelica_h8
     nome_ferro_casa = "Treliça H8"
-
 # --- B. MATERIAIS DA CASA ---
 perimetro_casa = (math.sqrt(area_construcao) * 4) + (qtd_comodos * 3.5)
 area_paredes_casa = perimetro_casa * 3.0
