@@ -71,16 +71,16 @@ with st.expander("🏪 Preços dos Materiais no Depósito (Clique para ajustar o
     with col_dep2:
         st.markdown("**⛓️ Ferragens (Varas de 6m):**") 
         preco_ferro_38 = st.number_input("Coluna/Viga 3/8 (R$):", value=130.0, step=2.0, key="p_f_38")
-        preco_ferro_516 = st.number_input("Coluna/Viga 5/16 (R$):", value=65.0, step=2.0, key="p_f_516")
-        preco_trelica_h8 = st.number_input("Treliça H8 (R$):", value=32.0, step=1.0, key="p_t_h8")
+        preco_ferro_516 = st.number_input("Coluna/Viga 5/16 (R$):", value=100.0, step=2.0, key="p_f_516")
+        preco_trelica_h8 = st.number_input("Treliça H8 (R$):", value=35.0, step=1.0, key="p_t_h8")
 
     with col_dep3:
         st.markdown("**🏠 Cobertura e Madeiramento:**")
         preco_telha_ceramica = st.number_input("Milheiro Telha Cerâmica (R$):", value=1800.0, step=50.0, key="p_t_cer")
         preco_telha_fibro = st.number_input("Telha Fibrocimento 2,44m (R$):", value=58.0, step=2.0, key="p_t_fib")
         preco_telha_sanduiche = st.number_input("Telha Sanduíche / m² (R$):", value=95.0, step=5.0, key="p_t_sand")
-        preco_viga_madeira_m = st.number_input("Viga de Madeira (Metro R$):", value=18.5, step=1.0, key="p_vig_m")
-        preco_caibro_m = st.number_input("Caibro/Terça (Metro R$):", value=8.0, step=0.5, key="p_caib_m")
+        preco_viga_madeira_m = st.number_input("Viga de Madeira (Metro R$):", value=30.0, step=1.0, key="p_vig_m")
+        preco_caibro_m = st.number_input("Caibro/Terça (Metro R$):", value=10.0, step=0.5, key="p_caib_m")
 
 st.write("---")
 
