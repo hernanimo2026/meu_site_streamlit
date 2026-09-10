@@ -89,12 +89,6 @@ st.write("---")
 # =========================================================================
 st.subheader("🗣️ 1. O que o cliente deseja construir?")
 
-descricao_cliente = st.text_input(
-    "Descrição simples da obra:",
-    value="Orçamento de uma casa de 63m² com 4 cômodos, contrapiso, área de circulação e muro de fechamento",
-    key="desc_cliente"
-)
-
 col_f1, col_f2, col_f3 = st.columns(3)
 
 with col_f1:
@@ -193,8 +187,18 @@ with col_f3:
         opcao_reboco_muro = "Sem Reboco"
         tipo_ferro_muro = "Treliça H8"
 
-st.write("---")
+# --- CAMPO DE DESCRIÇÃO AUTOMÁTICO E DINÂMICO ---
+texto_dinamico = f"Orçamento de uma casa de {int(area_construcao)}m² com {qtd_comodos} cômodos, contrapiso, área de circulação"
+if incluir_muro:
+    texto_dinamico += " e muro de fechamento"
 
+descricao_cliente = st.text_input(
+    "Descrição simples da obra:",
+    value=texto_dinamico,
+    key=f"desc_cliente_{area_construcao}_{qtd_comodos}_{incluir_muro}"
+)
+
+st.write("---")
 # =========================================================================
 # 💰 2. VALORAÇÃO E MÃO DE OBRA
 # =========================================================================
