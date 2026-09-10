@@ -276,11 +276,9 @@ areia_cp = area_construcao * espessura_cp * 0.60
 pedra_cp = area_construcao * espessura_cp * 0.60
 
 # Total Alvenaria + Contrapiso Casa
-sacos_cimento_casa = math.ceil((area_paredes_casa * 0.20) + (area_reb_casa * 0.15)) + sacos_cimento_cp
+sacos_cimento_alvenaria = math.ceil((area_paredes_casa * 0.20) + (area_reb_casa * 0.15))
+sacos_cimento_casa = sacos_cimento_alvenaria + sacos_cimento_cp
 custo_cimento_casa = sacos_cimento_casa * preco_cimento
-
-areia_casa = (area_paredes_casa * 0.04) + (area_reb_casa * 0.025) + areia_cp
-custo_areia_casa = areia_casa * preco_areia
 
 pedra_casa = (area_construcao * 0.08) + pedra_cp
 custo_pedra_casa = pedra_casa * preco_pedra
