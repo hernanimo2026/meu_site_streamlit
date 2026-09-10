@@ -194,17 +194,26 @@ with col_f3:
         opcao_reboco_muro = "Sem Reboco"
         tipo_ferro_muro = "Treliça H8"
 
-# --- CAMPO DE DESCRIÇÃO AUTOMÁTICO E DINÂMICO ---
-texto_dinamico = f"Orçamento de uma casa de {int(area_construcao)}m² com {qtd_comodos} cômodos, contrapiso, área de circulação"
+# ---- CAMPO DE DESCRIÇÃO AUTOMÁTICO E DINÂMICO ----
+partes_desc = [f"Orçamento de uma casa de {int(area_construcao)}m² com {qtd_comodos} cômodos"]
+
+if incluir_reboco:
+    partes_desc.append("reboco")
+if incluir_contrapiso:
+    partes_desc.append("contrapiso")
+
+partes_desc.append("área de circulação")
+
 if incluir_muro:
-    texto_dinamico += " e muro de fechamento"
+    partes_desc.append("e muro de fechamento")
+
+texto_dinamico = ", ".join(partes_desc)
 
 descricao_cliente = st.text_input(
     "Descrição simples da obra:",
     value=texto_dinamico,
-    key=f"desc_cliente_{area_construcao}_{qtd_comodos}_{incluir_muro}"
+    key=f"desc_cliente_{area_construcao}_{qtd_comodos}_{incluir_reboco}_{incluir_contrapiso}_{incluir_muro}"
 )
-
 st.write("---")
 # =========================================================================
 # 💰 2. VALORAÇÃO E MÃO DE OBRA
