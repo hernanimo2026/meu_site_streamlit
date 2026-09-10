@@ -276,8 +276,7 @@ areia_cp = area_construcao * espessura_cp * 0.60
 pedra_cp = area_construcao * espessura_cp * 0.60
 
 # Total Alvenaria + Contrapiso Casa
-sacos_cimento_alvenaria = math.ceil((area_paredes_casa * 0.20) + (area_reb_casa * 0.15))
-sacos_cimento_casa = sacos_cimento_alvenaria + sacos_cimento_cp
+sacos_cimento_casa = math.ceil((area_paredes_casa * 0.20) + (area_reb_casa * 0.15)) + sacos_cimento_cp
 custo_cimento_casa = sacos_cimento_casa * preco_cimento
 
 areia_casa = (area_paredes_casa * 0.04) + (area_reb_casa * 0.025) + areia_cp
@@ -285,6 +284,7 @@ custo_areia_casa = areia_casa * preco_areia
 
 pedra_casa = (area_construcao * 0.08) + pedra_cp
 custo_pedra_casa = pedra_casa * preco_pedra
+
 varas_ferro_casa = math.ceil(((perimetro_casa * 3) / 6.0) * fator_consumo_ferro)
 custo_ferro_casa = varas_ferro_casa * preco_ferro_casa_usado
 
@@ -391,9 +391,9 @@ col_r1, col_r2 = st.columns(2)
 
 with col_r1:
     st.markdown("### 🏠 Materiais da Casa (Inclui Contrapiso):")
-    st.write(f"• **Contrapiso Incluso:** {opcao_contrapiso} ({area_construcao:.0f} m²)")
+    st.write(f"• **Contrapiso Incluso:** {opcao_contrapiso} ({area_construcao:.0f} m²) → **{sacos_cimento_cp} sacos de cimento**")
     st.write(f"• **Tijolos:** {int(qtd_tijolos_casa)} un → **R$ {custo_tijolos_casa:,.2f}**")
-    st.write(f"• **Cimento (Alvenaria + Contrapiso):** {sacos_cimento_casa} sacos → **R$ {custo_cimento_casa:,.2f}**")
+    st.write(f"• **Cimento Total (Paredes + Piso):** {sacos_cimento_casa} sacos → **R$ {custo_cimento_casa:,.2f}**")
     st.write(f"• **Areia Total:** {areia_casa:.2f} m³ | **Pedra/Brita:** {pedra_casa:.2f} m³ → **R$ {(custo_areia_casa + custo_pedra_casa):,.2f}**")
     st.write(f"• **Ferragens Casa ({nome_ferro_casa}):** {varas_ferro_casa} varas (6m) → **R$ {custo_ferro_casa:,.2f}**")
     st.write(f"• **Cobertura/Madeiramento:** **R$ {custo_cobertura_casa:,.2f}**")
