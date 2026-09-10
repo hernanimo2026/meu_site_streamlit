@@ -405,7 +405,7 @@ with col_r2:
         st.write(f"• **Estrutura:** Baldrame + Respaldo + {num_colunas_muro} Colunas (a cada ~3m)")
         st.write(f"• **Tijolos:** {int(qtd_tijolos_muro)} un → **R$ {custo_tijolos_muro:,.2f}**")
         st.write(f"• **Cimento Muro:** {sacos_cimento_muro} sacos → **R$ {custo_cimento_muro:,.2f}**")
-        st.write(f"• **Areia + Pedra Muro:** **R$ {(custo_areia_muro + custo_pedra_muro):,.2f}**")
+        st.write(f"• **Areia Muro:** {areia_muro:.2f} m³ | **Pedra/Brita:** {pedra_muro:.2f} m³ → **R$ {(custo_areia_muro + custo_pedra_muro):,.2f}**")
         st.write(f"• **Ferragem Muro ({nome_ferro_muro}):** {varas_ferro_muro} varas (6m) → **R$ {custo_ferro_muro:,.2f}**")
     else:
         st.markdown("### 🧱 Muro de Fechamento:")
