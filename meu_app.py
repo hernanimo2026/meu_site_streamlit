@@ -210,7 +210,7 @@ if incluir_muro:
 texto_dinamico = ", ".join(partes_desc)
 
 descricao_cliente = st.text_input(
-    "**Descrição simples da obra:**",
+    "***Descrição simples da obra:***",
     value=texto_dinamico,
     key=f"desc_cliente_{area_construcao}_{qtd_comodos}_{incluir_reboco}_{incluir_contrapiso}_{incluir_muro}"
 )
