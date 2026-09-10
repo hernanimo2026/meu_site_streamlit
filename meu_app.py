@@ -126,40 +126,54 @@ with col_f1:
         opcao_contrapiso = "Sem Contrapiso"
 with col_f2:
     st.markdown("**💪 Reforço e Telhado:**")
+    
+    # Reforço estrutural (Sempre visível ou padrão)
     nivel_reforco = st.selectbox(
         "Qual o tipo/reforço da construção da Casa?",
         [
-            "1. Mais Reforçada (Estrutura Pesada / Ferro 3/8)",
+            "1. Econômica (Padrão Simples / Ferro 1/4)",
             "2. Reforçada (Padrão Comercial / Ferro 3/8)",
-            "3. Menos Reforçada (Padrão Residencial)",
-            "4. Economica (Ferro 5/16 + Treliça)",
-            "5. Leve (Treliça H8)"
+            "3. Extra Reforçada (Padrão Pesado / Ferro 1/2)"
         ],
         index=1,
-        key="sel_nivel_reforco"
-    )
-
-    tipo_telhado = st.selectbox(
-        "Tipo de Telhado:",
-        [
-            "Telhado Embutido com Platibanda (Fibrocimento / Sanduíche)",
-            "Telhado Aparente com Beiral (Fibrocimento / Sanduíche)",
-            "Telhado Tradicional Aparente (Telha Cerâmica)",
-            "Sem Cobertura / Laje Exposta"
-        ],
-        key="sel_tipo_telhado"
+        key="sel_reforco"
     )
     
-    if "Sem Cobertura" not in tipo_telhado:
+    # --- TELHADO OPCIONAL ---
+    incluir_telhado = st.checkbox("Incluir Telhado / Cobertura?", value=True, key="chk_telhado")
+    
+    if incluir_telhado:
+        tipo_telha = st.selectbox(
+            "Tipo de Telha:",
+            [
+                "Fibrocimento (Padrão 6mm)",
+                "Isotérmica (Telha Sanduíche)"
+            ],
+            key="sel_tipo_telha"
+        )
+        
+        estilo_telhado = st.selectbox(
+            "Estilo / Estrutura do Telhado:",
+            [
+                "Telhado Embutido (Com Platibanda)",
+                "Telhado Aparente (Com Beiral)"
+            ],
+            key="sel_estilo_telhado"
+        )
+        
         qtd_caidas = st.selectbox(
             "Quantidade de Caídas:",
-            ["1 Caída", "2 Caídas", "3 Caídas", "4 Caídas", "5 Caídas", "6 ou mais Caídas"],
+            ["1 Caída", "2 Caídas", "4 Caídas"],
             index=1,
             key="sel_caidas"
         )
+        
+        opcao_telhado = f"{estilo_telhado} - Telha {tipo_telha}"
     else:
-        qtd_caidas = "Nenhuma"
-
+        tipo_telha = "Sem Telha"
+        estilo_telhado = "Sem Telhado"
+        qtd_caidas = "1 Caída"
+        opcao_telhado = "Sem Cobertura / Sem Telhado"
 with col_f3:
     st.markdown("**🧱 Muro de Fechamento (Opcional):**")
     incluir_muro = st.checkbox("Incluir Muro no Orçamento?", value=True, key="chk_muro")
@@ -305,37 +319,34 @@ varas_ferro_casa = math.ceil(((perimetro_casa * 3) / 6.0) * fator_consumo_ferro)
 custo_ferro_casa = varas_ferro_casa * preco_ferro_casa_usado
 
 # Cobertura
-fator_caida_num = int(qtd_caidas[0]) if qtd_caidas[0].isdigit() else 2
+fator_caida_num = int(qtd_caidas[0]) if (qtd_caidas and qtd_caidas[0].isdigit()) else 2
 
-if "Fibrocimento / Sanduíche" in tipo_telhado:
-    area_telhado = area_construcao * (1.10 if "Aparente" in tipo_telhado else 1.0)
+if incluir_telhado:
+    # 1. Definição da área do telhado
+    area_telhado = area_construcao * (1.10 if "Aparente" in estilo_telhado else 1.0)
     lado_telhado = math.sqrt(area_telhado)
     
+    # 2. Cálculos do Madeiramento
     num_linhas_vigas = math.ceil(lado_telhado / 2.0) + 1
     metros_vigas_madeira = num_linhas_vigas * lado_telhado * (1.0 + (fator_caida_num * 0.04))
     
     num_linhas_caibros = math.ceil(lado_telhado / 1.0) + 1
     metros_caibros_madeira = num_linhas_caibros * lado_telhado * (1.0 + (fator_caida_num * 0.04))
     
-    if "Embutido" in tipo_telhado:
+    # 3. Cálculo Específico por Tipo de Telha
+    if "Sanduíche" in tipo_telha:
         custo_telhas = area_telhado * preco_telha_sanduiche
-    else:
+    elif "Fibrocimento" in tipo_telha:
         qtd_placas_fibro = math.ceil(area_telhado / 2.3)
         custo_telhas = qtd_placas_fibro * preco_telha_fibro
-
-elif "Tradicional Aparente" in tipo_telhado:
-    area_telhado = area_construcao * 1.20
-    lado_telhado = math.sqrt(area_telhado)
-    milheiros_telha_cer = (area_telhado * 30) / 1000.0
-    custo_telhas = milheiros_telha_cer * preco_telha_ceramica
-    
-    metros_vigas_madeira = (lado_telhado / 1.5 + 1) * lado_telhado
-    metros_caibros_madeira = (lado_telhado / 0.5 + 1) * lado_telhado
+    else:
+        custo_telhas = 0.0
 else:
+    # Caso a caixinha do telhado esteja desmarcada
+    area_telhado = 0.0
     custo_telhas = 0.0
     metros_vigas_madeira = 0.0
     metros_caibros_madeira = 0.0
-
 custo_vigas = metros_vigas_madeira * preco_viga_madeira_m
 custo_caibros = metros_caibros_madeira * preco_caibro_m
 custo_cobertura_casa = custo_telhas + custo_vigas + custo_caibros
