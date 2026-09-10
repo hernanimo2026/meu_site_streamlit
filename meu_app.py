@@ -96,27 +96,34 @@ with col_f1:
     area_construcao = st.number_input("Área Total da Casa (m²):", value=63.0, step=1.0, key="f_area")
     qtd_comodos = st.number_input("Quantidade de Cômodos:", value=4, step=1, key="f_comodos")
     
-    opcao_reboco = st.selectbox(
-        "🧱 Reboco da Casa:",
-        [
-            "2 Lados (Interno e Externo Completo)",
-            "1 Lado (Apenas Interno ou Externo)",
-            "Sem Reboco (Tijolo Aparente / Sem Massa)"
-        ],
-        key="sel_reboco_simples"
-    )
+    # --- REBOCO OPCIONAL ---
+    incluir_reboco = st.checkbox("Incluir Reboco na Casa?", value=True, key="chk_reboco")
+    if incluir_reboco:
+        opcao_reboco = st.selectbox(
+            "🧱 Tipo de Reboco da Casa:",
+            [
+                "2 Lados (Interno e Externo Completo)",
+                "1 Lado (Apenas Interno ou Externo)"
+            ],
+            key="sel_reboco_simples"
+        )
+    else:
+        opcao_reboco = "Sem Reboco (Tijolo Aparente / Sem Massa)"
 
-    opcao_contrapiso = st.selectbox(
-        "📐 Contrapiso / Base da Casa:",
-        [
-            "Contrapiso Padrão (5 cm)",
-            "Contrapiso Reforçado (7 cm)",
-            "Sem Contrapiso"
-        ],
-        index=0,
-        key="sel_contrapiso"
-    )
-
+    # --- CONTRAPISO OPCIONAL ---
+    incluir_contrapiso = st.checkbox("Incluir Contrapiso / Base?", value=True, key="chk_contrapiso")
+    if incluir_contrapiso:
+        opcao_contrapiso = st.selectbox(
+            "📐 Espessura do Contrapiso:",
+            [
+                "Contrapiso Padrão (5 cm)",
+                "Contrapiso Reforçado (7 cm)"
+            ],
+            index=0,
+            key="sel_contrapiso"
+        )
+    else:
+        opcao_contrapiso = "Sem Contrapiso"
 with col_f2:
     st.markdown("**💪 Reforço e Telhado:**")
     nivel_reforco = st.selectbox(
