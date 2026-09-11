@@ -142,8 +142,9 @@ with col_f2:
     else:
         nivel_reforco = "Sem Ferragem"
     
-    # --- TELHADO OPCIONAL ---
+# --- TELHADO OPCIONAL ---
     incluir_telhado = st.checkbox("Incluir Telhado / Cobertura?", value=True, key="chk_telhado")
+    
     if incluir_telhado:
         st.markdown("**🏠 TELHADO:**")
         tipo_telha = st.selectbox(
@@ -177,6 +178,7 @@ with col_f2:
         estilo_telhado = "Sem Telhado"
         qtd_caidas = "1 Caída"
         opcao_telhado = "Sem Cobertura / Sem Telhado"
+
 with col_f3:
     incluir_muro = st.checkbox("Incluir Muro no Orçamento?", value=True, key="chk_muro")
     if incluir_muro:
