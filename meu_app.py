@@ -140,9 +140,8 @@ with col_f2:
     )
     
     # --- TELHADO OPCIONAL ---
-    st.markdown("**💪 TELHADO:**")
     incluir_telhado = st.checkbox("Incluir Telhado / Cobertura?", value=True, key="chk_telhado")
-    
+    st.markdown("**💪 TELHADO:**")
     if incluir_telhado:
         tipo_telha = st.selectbox(
             "Tipo de Telha:",
