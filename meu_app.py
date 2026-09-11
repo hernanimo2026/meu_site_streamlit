@@ -128,9 +128,8 @@ with col_f2:
     incluir_ferragens = st.checkbox("Incluir Ferragens no Orçamento?", value=True, key="chk_ferragens")
     if incluir_ferragens:
         st.markdown("**💪 Ferragens:**")
-    
-    # Reforço estrutural (Sempre visível ou padrão)
-    nivel_reforco = st.selectbox(
+        # Reforço estrutural (Sempre visível ou padrão)
+        nivel_reforco = st.selectbox(
         "**💪 Qual o tipo de ferragens da construção da Casa?**",
         [
             "1. Econômica (Padrão Simples / Ferro 1/4)",
