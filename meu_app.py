@@ -143,7 +143,7 @@ with col_f2:
         nivel_reforco = "Sem Ferragem"
 # --- COLUNA 2: FERRAGENS E TELHADO ---
 with col_f2:
-    # --- FERRAGENS OPCIONAIS ---
+    # 1. Checkbox e Selectbox das Ferragens (Keys exclusivas)
     incluir_ferragens = st.checkbox("Incluir Ferragens no Orçamento?", value=True, key="chk_ferragens_casa")
     
     if incluir_ferragens:
@@ -155,13 +155,13 @@ with col_f2:
                 "Treliça H8 / H12 Pronta (Padrão Leve)"
             ],
             index=0,
-            key="sel_reforco"
+            key="sel_reforco_casa"
         )
     else:
         nivel_reforco = "Sem Ferragem"
 
-    # --- TELHADO OPCIONAL ---
-    incluir_telhado = st.checkbox("Incluir Telhado / Cobertura?", value=True, key="chk_telhado")
+    # 2. Checkbox e Selectboxes do Telhado (Keys exclusivas)
+    incluir_telhado = st.checkbox("Incluir Telhado / Cobertura?", value=True, key="chk_telhado_casa")
     
     if incluir_telhado:
         st.markdown("**🏠 TELHADO:**")
@@ -171,7 +171,7 @@ with col_f2:
                 "Fibrocimento (Padrão 6mm)",
                 "Isotérmica (Telha Sanduíche)"
             ],
-            key="sel_tipo_telha"
+            key="sel_tipo_telha_casa"
         )
         
         estilo_telhado = st.selectbox(
@@ -180,14 +180,14 @@ with col_f2:
                 "Telhado Embutido (Com Platibanda)",
                 "Telhado Aparente (Com Beiral)"
             ],
-            key="sel_estilo_telhado"
+            key="sel_estilo_telhado_casa"
         )
         
         qtd_caidas = st.selectbox(
             "Quantidade de Caídas:",
             ["1 Caída", "2 Caídas", "4 Caídas"],
             index=1,
-            key="sel_caidas"
+            key="sel_caidas_casa"
         )
         
         opcao_telhado = f"{estilo_telhado} - Telha {tipo_telha}"
@@ -196,7 +196,6 @@ with col_f2:
         estilo_telhado = "Sem Telhado"
         qtd_caidas = "1 Caída"
         opcao_telhado = "Sem Cobertura / Sem Telhado"
-
 # =========================================================
 # LÓGICA DE CÁLCULO (BACKEND)
 # =========================================================
