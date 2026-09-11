@@ -125,11 +125,13 @@ with col_f1:
     else:
         opcao_contrapiso = "Sem Contrapiso"
 with col_f2:
-    st.markdown("**💪 Reforço:**")
+    incluir_ferragens = st.checkbox("Incluir Ferragens no Orçamento?", value=True, key="chk_ferragens")
+    if incluir_ferragens:
+        st.markdown("**💪 Ferragens:**")
     
     # Reforço estrutural (Sempre visível ou padrão)
     nivel_reforco = st.selectbox(
-        "**💪 Qual o tipo de reforço da construção da Casa?**",
+        "**💪 Qual o tipo de ferragens da construção da Casa?**",
         [
             "1. Econômica (Padrão Simples / Ferro 1/4)",
             "2. Reforçada (Padrão Comercial / Ferro 3/8)",
@@ -142,7 +144,7 @@ with col_f2:
     # --- TELHADO OPCIONAL ---
     incluir_telhado = st.checkbox("Incluir Telhado / Cobertura?", value=True, key="chk_telhado")
     if incluir_telhado:
-        st.markdown("**💪 TELHADO:**")
+        st.markdown("**🏠 TELHADO:**")
         tipo_telha = st.selectbox(
             "Tipo de Telha:",
             [
