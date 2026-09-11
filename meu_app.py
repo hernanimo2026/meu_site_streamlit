@@ -144,7 +144,7 @@ with col_f2:
 # --- COLUNA 2: FERRAGENS E TELHADO ---
 with col_f2:
     # --- FERRAGENS OPCIONAIS ---
-    incluir_ferragens = st.checkbox("Incluir Ferragens no Orçamento?", value=True, key="chk_ferragens")
+    incluir_ferragens = st.checkbox("Incluir Ferragens no Orçamento?", value=True, key="chk_ferragens_casa")
     
     if incluir_ferragens:
         nivel_reforco = st.selectbox(
