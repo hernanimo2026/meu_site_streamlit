@@ -125,7 +125,7 @@ with col_f1:
     else:
         opcao_contrapiso = "Sem Contrapiso"
 with col_f2:
-    st.markdown("**💪 Reforço e Telhado:**")
+    st.markdown("**💪 Reforço:**")
     
     # Reforço estrutural (Sempre visível ou padrão)
     nivel_reforco = st.selectbox(
@@ -140,6 +140,7 @@ with col_f2:
     )
     
     # --- TELHADO OPCIONAL ---
+    st.markdown("**💪 TELHADO:**")
     incluir_telhado = st.checkbox("Incluir Telhado / Cobertura?", value=True, key="chk_telhado")
     
     if incluir_telhado:
