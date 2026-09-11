@@ -176,8 +176,8 @@ with col_f2:
         opcao_telhado = "Sem Cobertura / Sem Telhado"
 with col_f3:
     incluir_muro = st.checkbox("Incluir Muro no Orçamento?", value=True, key="chk_muro")
-    st.markdown("**🧱 Muro de Fechamento (Opcional):**")
     if incluir_muro:
+        st.markdown("**🧱 Muro de Fechamento (Opcional):**")
         metros_muro = st.number_input("Comprimento do Muro (Metros):", value=30.0, step=1.0, key="m_muro_m")
         altura_muro = st.number_input("Altura do Muro (Metros):", value=2.0, step=0.1, key="m_muro_h")
         
