@@ -125,20 +125,22 @@ with col_f1:
     else:
         opcao_contrapiso = "Sem Contrapiso"
 with col_f2:
+    # --- FERRAGENS OPCIONAIS ---
     incluir_ferragens = st.checkbox("Incluir Ferragens no Orçamento?", value=True, key="chk_ferragens")
+
     if incluir_ferragens:
-        
-        # Reforço estrutural (Sempre visível ou padrão)
         nivel_reforco = st.selectbox(
-        "**Qual o tipo de ferragens da construção da Casa?**",
+        "Qual o tipo de ferragem pronta da Casa?",
         [
-            "1. Econômica (Padrão Simples / Ferro 1/4)",
-            "2. Reforçada (Padrão Comercial / Ferro 3/8)",
-            "3. Extra Reforçada (Padrão Pesado / Ferro 1/2)"
+            "Coluna/Viga 3/8\" Pronta (Padrão Comercial)",
+            "Coluna/Viga 5/16\" Pronta (Padrão Econômico)",
+            "Treliça H8 / H12 Pronta (Padrão Leve)"
         ],
-        index=1,
+        index=0,
         key="sel_reforco"
     )
+    else:
+        nivel_reforco = "Sem Ferragem"
     
     # --- TELHADO OPCIONAL ---
     incluir_telhado = st.checkbox("Incluir Telhado / Cobertura?", value=True, key="chk_telhado")
@@ -260,27 +262,24 @@ st.write("---")
 # 🧮 CÁLCULOS TÉCNICOS SEPARADOS (CASA vs MURO)
 # =========================================================================
 
-# --- A. FERRAGEM DA CASA ---
-if "1." in nivel_reforco:
-    fator_consumo_ferro = 1.30
-    preco_ferro_casa_usado = preco_ferro_38
-    nome_ferro_casa = "Coluna/Viga 3/8\" (Estrutura Pesada)"
-elif "2." in nivel_reforco:
-    fator_consumo_ferro = 1.00
-    preco_ferro_casa_usado = preco_ferro_38
-    nome_ferro_casa = "Coluna/Viga 3/8\" (Padrão Comercial)"
-elif "3." in nivel_reforco:
-    fator_consumo_ferro = 0.85
-    preco_ferro_casa_usado = preco_ferro_38
-    nome_ferro_casa = "Coluna/Viga 3/8\" (Padrão Residencial)"
-elif "4." in nivel_reforco:
-    fator_consumo_ferro = 1.00
-    preco_ferro_casa_usado = preco_ferro_516
-    nome_ferro_casa = "Coluna/Viga 5/16\""
+# ---- A. FERRAGEM DA CASA ----
+if incluir_ferragens:
+    if "3/8" in nivel_reforco:
+        fator_consumo_ferro = 1.00
+        preco_ferro_casa_usado = preco_ferro_38
+        nome_ferro_casa = "Coluna/Viga 3/8\" Pronta"
+    elif "5/16" in nivel_reforco:
+        fator_consumo_ferro = 1.00
+        preco_ferro_casa_usado = preco_ferro_516
+        nome_ferro_casa = "Coluna/Viga 5/16\" Pronta"
+    else:
+        fator_consumo_ferro = 1.00
+        preco_ferro_casa_usado = preco_trelica_h8
+        nome_ferro_casa = "Treliça Pronta"
 else:
-    fator_consumo_ferro = 1.00
-    preco_ferro_casa_usado = preco_trelica_h8
-    nome_ferro_casa = "Treliça H8"
+    fator_consumo_ferro = 0.0
+    preco_ferro_casa_usado = 0.0
+    nome_ferro_casa = "Sem Ferragem"    
 # --- B. MATERIAIS DA CASA ---
 perimetro_casa = (math.sqrt(area_construcao) * 4) + (qtd_comodos * 3.5)
 area_paredes_casa = perimetro_casa * 3.0
