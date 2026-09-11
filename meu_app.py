@@ -141,28 +141,9 @@ with col_f2:
     )
     else:
         nivel_reforco = "Sem Ferragem"
-# --- COLUNA 2: FERRAGENS E TELHADO ---
-with col_f2:
-    # --- FERRAGENS OPCIONAIS ---
-    incluir_ferragens = st.checkbox("Incluir Ferragens no Orçamento?", value=True, key="chk_ferragens")
     
-    if incluir_ferragens:
-        nivel_reforco = st.selectbox(
-            "Qual o tipo de ferragem pronta da Casa?",
-            [
-                "Coluna/Viga 3/8\" Pronta (Padrão Comercial)",
-                "Coluna/Viga 5/16\" Pronta (Padrão Econômico)",
-                "Treliça H8 / H12 Pronta (Padrão Leve)"
-            ],
-            index=0,
-            key="sel_reforco"
-        )
-    else:
-        nivel_reforco = "Sem Ferragem"
-
-    # --- TELHADO OPCIONAL ---
+# --- TELHADO OPCIONAL ---
     incluir_telhado = st.checkbox("Incluir Telhado / Cobertura?", value=True, key="chk_telhado")
-    
     if incluir_telhado:
         st.markdown("**🏠 TELHADO:**")
         tipo_telha = st.selectbox(
@@ -196,7 +177,6 @@ with col_f2:
         estilo_telhado = "Sem Telhado"
         qtd_caidas = "1 Caída"
         opcao_telhado = "Sem Cobertura / Sem Telhado"
-
 
 with col_f3:
     incluir_muro = st.checkbox("Incluir Muro no Orçamento?", value=True, key="chk_muro")
