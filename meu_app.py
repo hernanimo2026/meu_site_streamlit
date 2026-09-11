@@ -130,7 +130,7 @@ with col_f2:
         st.markdown("**💪 Ferragens:**")
         # Reforço estrutural (Sempre visível ou padrão)
         nivel_reforco = st.selectbox(
-        "**💪 Qual o tipo de ferragens da construção da Casa?**",
+        "**Qual o tipo de ferragens da construção da Casa?**",
         [
             "1. Econômica (Padrão Simples / Ferro 1/4)",
             "2. Reforçada (Padrão Comercial / Ferro 3/8)",
