@@ -144,7 +144,7 @@ with col_f2:
 # --- COLUNA 2: FERRAGENS E TELHADO ---
 with col_f2:
     # --- FERRAGENS OPCIONAIS ---
-    incluir_ferragens = st.checkbox("Incluir Ferragens no Orçamento?", value=True, key="chk_ferragens_casa")
+    incluir_ferragens = st.checkbox("Incluir Ferragens no Orçamento?", value=True, key="chk_ferragens")
     
     if incluir_ferragens:
         nivel_reforco = st.selectbox(
@@ -197,94 +197,7 @@ with col_f2:
         qtd_caidas = "1 Caída"
         opcao_telhado = "Sem Cobertura / Sem Telhado"
 
-# =========================================================
-# LÓGICA DE CÁLCULO (BACKEND)
-# =========================================================
 
-# 1. CÁLCULOS BASE (Tem que vir ANTES para não dar erro)
-perimetro_casa = (math.sqrt(area_construcao) * 4) + (qtd_comodos * 3.5)
-area_paredes_casa = perimetro_casa * 3.0
-
-# ---- A. FERRAGEM DA CASA ----
-if incluir_ferragens:
-    metros_ferro_casa = perimetro_casa * 1.2
-    
-    if "3/8" in nivel_reforco:
-        fator_consumo_ferro = 1.00
-        preco_ferro_casa_usado = preco_ferro_38
-        nome_ferro_casa = "Coluna/Viga 3/8\" Pronta"
-    elif "5/16" in nivel_reforco:
-        fator_consumo_ferro = 1.00
-        preco_ferro_casa_usado = preco_ferro_516
-        nome_ferro_casa = "Coluna/Viga 5/16\" Pronta"
-    else:
-        fator_consumo_ferro = 1.00
-        preco_ferro_casa_usado = preco_trelica_h8
-        nome_ferro_casa = "Treliça Pronta"
-        
-    varas_ferro_casa = math.ceil(metros_ferro_casa / 6.0)
-    custo_ferro_casa = varas_ferro_casa * preco_ferro_casa_usado
-else:
-    fator_consumo_ferro = 0.0
-    preco_ferro_casa_usado = 0.0
-    nome_ferro_casa = "Sem Ferragem"
-    varas_ferro_casa = 0
-    custo_ferro_casa = 0.0
-
-
-# ---- B. CÁLCULO DA COBERTURA E PLATIBANDA ----
-if incluir_telhado:
-    if "Platibanda" in estilo_telhado:
-        # Telhado Embutido: economiza telha (1.05x), mas exige parede de platibanda (0.80m de altura)
-        area_telhado = area_construcao * 1.05
-        
-        # Platibanda (Alvenaria, Reboco e Respaldo Extra)
-        altura_platibanda = 0.80
-        area_platibanda = perimetro_casa * altura_platibanda
-        
-        # Consumos adicionais de material pesado
-        tijolos_platibanda = math.ceil(area_platibanda * 26)
-        sacos_cimento_platibanda = math.ceil(area_platibanda * 0.25)
-        areia_platibanda = area_platibanda * 0.05
-        
-        # Ferragem de respaldo no topo da platibanda
-        varas_ferro_platibanda = math.ceil(perimetro_casa / 6.0)
-        custo_ferro_platibanda = varas_ferro_platibanda * (preco_ferro_casa_usado if incluir_ferragens else preco_ferro_38)
-        
-        # Custo total acumulado da estrutura da platibanda
-        custo_platibanda_extra = (
-            (tijolos_platibanda / 1000.0 * preco_tijolo) +
-            (sacos_cimento_platibanda * preco_cimento) +
-            (areia_platibanda * preco_areia) +
-            custo_ferro_platibanda
-        )
-    else:
-        # Telhado Aparente: consome 25% a mais de área (beirais), mas não gera alvenaria extra
-        area_telhado = area_construcao * 1.25
-        custo_platibanda_extra = 0.0
-
-    # Madeiramento e Telhas
-    lado_telhado = math.sqrt(area_telhado)
-    fator_caida_num = int(qtd_caidas[0]) if (qtd_caidas and qtd_caidas[0].isdigit()) else 2
-    
-    metros_vigas_madeira = (math.ceil(lado_telhado / 2.0) + 1) * lado_telhado * (1.0 + (fator_caida_num * 0.04))
-    
-    if "Sanduíche" in tipo_telha:
-        custo_telhas = area_telhado * preco_telha_sanduiche
-    elif "Fibrocimento" in tipo_telha:
-        qtd_placas_fibro = math.ceil(area_telhado / 2.3)
-        custo_telhas = qtd_placas_fibro * preco_telha_fibro
-    else:
-        custo_telhas = 0.0
-
-    # Custo Final da Cobertura (Garante que a Platibanda encareça o Telhado Embutido)
-    custo_cobertura_casa = custo_telhas + (metros_vigas_madeira * 12.0) + custo_platibanda_extra
-else:
-    area_telhado = 0.0
-    custo_telhas = 0.0
-    metros_vigas_madeira = 0.0
-    custo_platibanda_extra = 0.0
-    custo_cobertura_casa = 0.0
 with col_f3:
     incluir_muro = st.checkbox("Incluir Muro no Orçamento?", value=True, key="chk_muro")
     if incluir_muro:
