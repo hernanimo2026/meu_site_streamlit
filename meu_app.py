@@ -516,3 +516,40 @@ with col_sub3:
 st.write("---")
 
 st.success(f"✅ **VALOR TOTAL GERAL DA OBRA:** R$ {total_geral_final:,.2f}")
+# =========================================================================
+# 📘 MANUAL DO PROPRIETÁRIO / GUIA DE MONTAGEM (NO FINAL DA TELA)
+# =========================================================================
+st.write("---")
+
+with st.expander("📘 **Manual do Proprietário / Guia de Montagem da Obra (Clique para abrir)**"):
+    st.markdown("""
+    ### 🚗 Guia Rápido de Cuidados e Passos da Obra
+    *Assim como um carro novo ou um móvel para montar, a sua construção exige cuidados específicos em cada etapa:*
+    """)
+    
+    col_m1, col_m2 = st.columns(2)
+    
+    with col_m1:
+        st.markdown("""
+        **1. 🧱 Ordem das Etapas da Construção:**
+        * **1º Fundação / Baldrame:** Preparação e impermeabilização da base.
+        * **2º Alvenaria:** Levantamento das paredes e caixas de portas/janelas.
+        * **3º Estrutura / Respaldo:** Colunas e vigas de amarração.
+        * **4º Cobertura:** Montagem da estrutura e assentamento das telhas.
+        * **5º Acabamento:** Contrapiso, instalações elétricas/hidráulicas e reboco.
+
+        **2. 💧 Dicas de Molhagem e Cura do Cimento:**
+        * O contrapiso e a laje precisam ser molhados nos primeiros 3 a 5 dias para não criar trincas ou rachaduras.
+        """)
+        
+    with col_m2:
+        st.markdown("""
+        **3. 🛠️ Onde Ter Cuidado ao Furar Paredes:**
+        * Nunca fure na direção vertical (para cima ou para baixo) de tomadas e interruptores.
+        * Evite furar a 15 cm do piso (onde passam os canos do contrapiso).
+
+        **4. 🧹 Manutenção Preventiva do Telhado:**
+        * Limpe as calhas e verifique as telhas antes do período das chuvas.
+        """)
+    
+    st.info("💡 **Dica de Ouro:** Guarde este orçamento e a planta técnica para futuras reformas ou ampliações na sua casa.")
