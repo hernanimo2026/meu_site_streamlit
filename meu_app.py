@@ -135,8 +135,8 @@ with col_f2:
         nivel_reforco = st.selectbox(
             "Qual o tipo de ferragem pronta da Casa?",
             [
+                "Coluna/Viga 5/16\" Pronta (Padrão Economico)",
                 "Coluna/Viga 3/8\" Pronta (Padrão Comercial)",
-                "Coluna/Viga 5/16\" Pronta (Padrão Econômico)",
                 "Treliça H8 / H12 Pronta (Padrão Leve)"
             ],
             index=0,
