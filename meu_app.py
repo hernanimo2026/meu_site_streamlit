@@ -269,14 +269,14 @@ st.write("---")
 
 # ---- A. FERRAGEM DA CASA ----
 if incluir_ferragens:
-    if "3/8" in nivel_reforco:
-        fator_consumo_ferro = 1.00
-        preco_ferro_casa_usado = preco_ferro_38
-        nome_ferro_casa = "Coluna/Viga 3/8\" Pronta"
-    elif "5/16" in nivel_reforco:
+    if "5/16" in nivel_reforco:
         fator_consumo_ferro = 1.00
         preco_ferro_casa_usado = preco_ferro_516
         nome_ferro_casa = "Coluna/Viga 5/16\" Pronta"
+    elif "3/8" in nivel_reforco:
+        fator_consumo_ferro = 1.00
+        preco_ferro_casa_usado = preco_ferro_38
+        nome_ferro_casa = "Coluna/Viga 3/8\" Pronta"
     else:
         fator_consumo_ferro = 1.00
         preco_ferro_casa_usado = preco_trelica_h8
