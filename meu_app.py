@@ -429,7 +429,7 @@ subtotal_obra = total_materiais_geral + valor_mao_obra_total + valor_servicos_ex
 total_geral_final = subtotal_obra - desconto
 
 # =========================================================================
-# 📋 RESUMO DO ORÇAMENTO
+# 📋 RESUMO DO ORÇAMENTO GERADO
 # =========================================================================
 st.subheader("📋 Resumo do Orçamento Gerado")
 
@@ -439,12 +439,39 @@ col_r1, col_r2 = st.columns(2)
 
 with col_r1:
     st.markdown("### 🏠 Materiais da Casa (Inclui Contrapiso):")
-    st.write(f"• **Contrapiso Incluso:** {opcao_contrapiso} ({area_construcao:.0f} m²) → **{sacos_cimento_cp} sacos de cimento**")
+    st.write(f"• **Contrapiso Incluso:** {opcao_contrapiso} ({area_construcao:.0f} m²)")
     st.write(f"• **Tijolos:** {int(qtd_tijolos_casa)} un → **R$ {custo_tijolos_casa:,.2f}**")
-    st.write(f"• **Cimento Total (Paredes + Piso):** {sacos_cimento_casa} sacos → **R$ {custo_cimento_casa:,.2f}**")
+    
+    # --- CIMENTO COM DESMEMBRAMENTO CLARO (SEM DUPLICIDADE) ---
+    sacos_paredes = sacos_cimento_casa - sacos_cimento_cp
+    if sacos_cimento_cp > 0:
+        st.write(f"• **Cimento TOTAL da Casa:** **{sacos_cimento_casa} sacos** ({sacos_paredes} p/ paredes/reboco + {sacos_cimento_cp} p/ piso) → **R$ {custo_cimento_casa:,.2f}**")
+    else:
+        st.write(f"• **Cimento TOTAL da Casa:** **{sacos_cimento_casa} sacos** → **R$ {custo_cimento_casa:,.2f}**")
+        
     st.write(f"• **Areia Total:** {areia_casa:.2f} m³ | **Pedra/Brita:** {pedra_casa:.2f} m³ → **R$ {(custo_areia_casa + custo_pedra_casa):,.2f}**")
     st.write(f"• **Ferragens Casa ({nome_ferro_casa}):** {varas_ferro_casa} varas (6m) → **R$ {custo_ferro_casa:,.2f}**")
-    st.write(f"• **Cobertura/Madeiramento:** **R$ {custo_cobertura_casa:,.2f}**")
+    
+    # --- DETALHAMENTO DE TELHAS E MADEIRAMENTO ---
+    if incluir_telhado:
+        st.markdown("**🏠 Detalhamento da Cobertura:**")
+        
+        # Quantidade e Tipo de Telhas
+        if "Fibrocimento" in tipo_telha:
+            qtd_placas = math.ceil(area_telhado / 2.3)
+            st.write(f"  - **Telhas Fibrocimento (2,44m):** {qtd_placas} unidades (Área: {area_telhado:.1f} m²)")
+        elif "Sanduíche" in tipo_telha:
+            st.write(f"  - **Telha Isotérmica Sanduíche:** {area_telhado:.1f} m²")
+        else:
+            qtd_telhas_cer = math.ceil(area_telhado * 16)
+            st.write(f"  - **Telhas Cerâmicas:** {qtd_telhas_cer} unidades")
+
+        # Metragem das Madeiras
+        st.write(f"  - **Vigas de Madeira:** {metros_vigas_madeira:.1f} metros lineares")
+        st.write(f"  - **Caibros/Terças:** {metros_caibros_madeira:.1f} metros lineares")
+        st.write(f"  - **Custo Total Cobertura:** **R$ {custo_cobertura_casa:,.2f}**")
+    else:
+        st.write("• **Cobertura:** Sem telhado incluso neste orçamento.")
 
 with col_r2:
     if incluir_muro:
@@ -458,7 +485,6 @@ with col_r2:
     else:
         st.markdown("### 🧱 Muro de Fechamento:")
         st.write("• Muro não incluso neste orçamento.")
-
 st.write("---")
 
 # =========================================================================
