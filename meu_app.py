@@ -255,10 +255,10 @@ with col_v1:
     st.caption(f"Mão de obra Casa: **R$ {valor_mao_obra_casa:,.2f}** | Muro: **R$ {valor_mao_obra_muro:,.2f}**")
 
 with col_v2:
-    valor_servicos_extras = st.number_input("Serviços Extras / Acabamento (R$):", value=1000.0, step=100.0, key="v_extras_serv")
+    valor_servicos_extras = st.number_input("Serviços Extras / Acabamento (R$):", value=500.0, step=100.0, key="v_extras_serv")
 
 with col_v3:
-    reserva_materiais = st.number_input("Reserva p/ Materiais Extras (R$):", value=100.0, step=50.0, key="v_reserva_mat")
+    reserva_materiais = st.number_input("Reserva p/ Materiais Extras (R$):", value=1000.0, step=50.0, key="v_reserva_mat")
     desconto = st.number_input("Desconto Concedido (R$):", value=0.0, step=50.0, key="v_desconto")
 
 st.write("---")
