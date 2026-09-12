@@ -36,6 +36,7 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+
 # =========================================================================
 # 🧱 LINHA 1: TÍTULO E BOTÃO WHATSAPP
 # =========================================================================
@@ -46,11 +47,12 @@ col2_esq, col2_dir = st.columns(2)
 with col2_esq:
     st.write("Sistemas de Orçamentos Rápidos — Serviços Gerais")
     st.write("Mensagem do dia: ***Deus seja louvado!***")
-    st.write("Anucios em **GERAL**! [Clique aqui]  (https://drive.google.com/file/d/1J_W1uD78018UqgCo1L2aULdPxU_OF4lh/view?usp=sharing)")
+    st.write("Anucios em **GERAL**! [Clique aqui]  (ZERO)")
 
 with col2_dir:
-
-     st.link_button("⚠️ WhatsApp", "https://wa.me/5591991211780?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento."
+    st.link_button(
+        "⚠️ WhatsApp", 
+        "https://wa.me/5591991211780?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento."
     )
 
 # =========================================================================
@@ -63,7 +65,7 @@ with st.expander("🏪 Preços dos Materiais no Depósito (Clique para ajustar o
     
     with col_dep1:
         st.markdown("**🧱 Alvenaria e Agregados:**")
-        preco_tijolo = st.number_input("Milheiro de Tijolo (R$):", value=1300.0, step=50.0, key="p_tijolo")
+        preco_tijolo = st.number_input("Milheiro de Tijolo (R$):", value=1450.0, step=50.0, key="p_tijolo")
         preco_cimento = st.number_input("Saco de Cimento 50kg (R$):", value=50.0, step=1.0, key="p_cimento")
         preco_areia = st.number_input("Metro de Areia (R$):", value=180.0, step=5.0, key="p_areia")
         preco_pedra = st.number_input("Metro de Pedra/Brita (R$):", value=240.0, step=5.0, key="p_pedra")
@@ -71,8 +73,8 @@ with st.expander("🏪 Preços dos Materiais no Depósito (Clique para ajustar o
     with col_dep2:
         st.markdown("**⛓️ Ferragens (Varas de 6m):**") 
         preco_ferro_38 = st.number_input("Coluna/Viga 3/8 (R$):", value=170.0, step=2.0, key="p_f_38")
-        preco_ferro_516 = st.number_input("Coluna/Viga 5/16 (R$):", value=100.0, step=2.0, key="p_f_516")
-        preco_trelica_h8 = st.number_input("Treliça H8 (R$):", value=35.0, step=1.0, key="p_t_h8")
+        preco_ferro_516 = st.number_input("Coluna/Viga 5/16 (R$):", value=120.0, step=2.0, key="p_f_516")
+        preco_trelica_h8 = st.number_input("Treliça H8 (R$):", value=45.0, step=1.0, key="p_t_h8")
 
     with col_dep3:
         st.markdown("**🏠 Cobertura e Madeiramento:**")
@@ -124,25 +126,26 @@ with col_f1:
         )
     else:
         opcao_contrapiso = "Sem Contrapiso"
+
 with col_f2:
     # --- FERRAGENS OPCIONAIS ---
     incluir_ferragens = st.checkbox("Incluir Ferragens no Orçamento?", value=True, key="chk_ferragens")
 
     if incluir_ferragens:
         nivel_reforco = st.selectbox(
-        "Qual o tipo de ferragem pronta da Casa?",
-        [
-            "Coluna/Viga 3/8\" Pronta (Padrão Comercial)",
-            "Coluna/Viga 5/16\" Pronta (Padrão Econômico)",
-            "Treliça H8 / H12 Pronta (Padrão Leve)"
-        ],
-        index=0,
-        key="sel_reforco"
-    )
+            "Qual o tipo de ferragem pronta da Casa?",
+            [
+                "Coluna/Viga 3/8\" Pronta (Padrão Comercial)",
+                "Coluna/Viga 5/16\" Pronta (Padrão Econômico)",
+                "Treliça H8 / H12 Pronta (Padrão Leve)"
+            ],
+            index=0,
+            key="sel_reforco"
+        )
     else:
         nivel_reforco = "Sem Ferragem"
     
-# --- TELHADO OPCIONAL ---
+    # --- TELHADO OPCIONAL ---
     incluir_telhado = st.checkbox("Incluir Telhado / Cobertura?", value=True, key="chk_telhado")
     if incluir_telhado:
         st.markdown("**🏠 TELHADO:**")
@@ -233,6 +236,7 @@ descricao_cliente = st.text_input(
     key=f"desc_cliente_{area_construcao}_{qtd_comodos}_{incluir_reboco}_{incluir_contrapiso}_{incluir_muro}"
 )
 st.write("---")
+
 # =========================================================================
 # 💰 2. VALORAÇÃO E MÃO DE OBRA
 # =========================================================================
@@ -280,12 +284,24 @@ if incluir_ferragens:
 else:
     fator_consumo_ferro = 0.0
     preco_ferro_casa_usado = 0.0
-    nome_ferro_casa = "Sem Ferragem"    
-# --- B. MATERIAIS DA CASA ---
-perimetro_casa = (math.sqrt(area_construcao) * 4) + (qtd_comodos * 3.5)
-area_paredes_casa = perimetro_casa * 3.0
+    nome_ferro_casa = "Sem Ferragem"
 
-qtd_tijolos_casa = area_paredes_casa * 26
+# --- B. MATERIAIS DA CASA ---
+perimetro_externo_casa = math.sqrt(area_construcao) * 4
+perimetro_total_paredes = perimetro_externo_casa + (qtd_comodos * 3.5)
+area_paredes_casa = perimetro_total_paredes * 2.80
+
+# --- LÓGICA DA PLATIBANDA ---
+if incluir_telhado and "Platibanda" in estilo_telhado:
+    altura_platibanda = 0.80
+    area_platibanda = perimetro_externo_casa * altura_platibanda
+else:
+    area_platibanda = 0.0
+
+# Área Total de Paredes (Casa + Platibanda)
+area_alvenaria_total = area_paredes_casa + area_platibanda
+
+qtd_tijolos_casa = area_alvenaria_total * 26
 milheiros_tijolos_casa = qtd_tijolos_casa / 1000.0
 custo_tijolos_casa = milheiros_tijolos_casa * preco_tijolo
 
@@ -306,35 +322,32 @@ else:
 areia_cp = area_construcao * espessura_cp * 0.60
 pedra_cp = area_construcao * espessura_cp * 0.60
 
-# Total Alvenaria + Contrapiso Casa
-sacos_cimento_casa = math.ceil((area_paredes_casa * 0.20) + (area_reb_casa * 0.15)) + sacos_cimento_cp
+# Total Alvenaria + Platibanda + Contrapiso Casa
+sacos_cimento_casa = math.ceil((area_alvenaria_total * 0.20) + (area_reb_casa * 0.15)) + sacos_cimento_cp
 custo_cimento_casa = sacos_cimento_casa * preco_cimento
 
-areia_casa = (area_paredes_casa * 0.04) + (area_reb_casa * 0.025) + areia_cp
+areia_casa = (area_alvenaria_total * 0.04) + (area_reb_casa * 0.025) + areia_cp
 custo_areia_casa = areia_casa * preco_areia
 
 pedra_casa = (area_construcao * 0.08) + pedra_cp
 custo_pedra_casa = pedra_casa * preco_pedra
 
-varas_ferro_casa = math.ceil(((perimetro_casa * 3) / 6.0) * fator_consumo_ferro)
+varas_ferro_casa = math.ceil(((perimetro_total_paredes * 3) / 6.0) * fator_consumo_ferro)
 custo_ferro_casa = varas_ferro_casa * preco_ferro_casa_usado
 
 # Cobertura
 fator_caida_num = int(qtd_caidas[0]) if (qtd_caidas and qtd_caidas[0].isdigit()) else 2
 
 if incluir_telhado:
-    # 1. Definição da área do telhado
     area_telhado = area_construcao * (1.10 if "Aparente" in estilo_telhado else 1.0)
     lado_telhado = math.sqrt(area_telhado)
     
-    # 2. Cálculos do Madeiramento
     num_linhas_vigas = math.ceil(lado_telhado / 2.0) + 1
     metros_vigas_madeira = num_linhas_vigas * lado_telhado * (1.0 + (fator_caida_num * 0.04))
     
     num_linhas_caibros = math.ceil(lado_telhado / 1.0) + 1
     metros_caibros_madeira = num_linhas_caibros * lado_telhado * (1.0 + (fator_caida_num * 0.04))
     
-    # 3. Cálculo Específico por Tipo de Telha
     if "Sanduíche" in tipo_telha:
         custo_telhas = area_telhado * preco_telha_sanduiche
     elif "Fibrocimento" in tipo_telha:
@@ -343,11 +356,11 @@ if incluir_telhado:
     else:
         custo_telhas = 0.0
 else:
-    # Caso a caixinha do telhado esteja desmarcada
     area_telhado = 0.0
     custo_telhas = 0.0
     metros_vigas_madeira = 0.0
     metros_caibros_madeira = 0.0
+
 custo_vigas = metros_vigas_madeira * preco_viga_madeira_m
 custo_caibros = metros_caibros_madeira * preco_caibro_m
 custo_cobertura_casa = custo_telhas + custo_vigas + custo_caibros
@@ -399,6 +412,13 @@ else:
     total_geral_muro = 0.0
     qtd_tijolos_muro = 0
     sacos_cimento_muro = 0
+    areia_muro = 0.0
+    pedra_muro = 0.0
+    custo_tijolos_muro = 0.0
+    custo_cimento_muro = 0.0
+    custo_areia_muro = 0.0
+    custo_pedra_muro = 0.0
+    custo_ferro_muro = 0.0
     varas_ferro_muro = 0
     nome_ferro_muro = "Nenhum"
     num_colunas_muro = 0
