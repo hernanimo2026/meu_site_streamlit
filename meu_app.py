@@ -99,7 +99,7 @@ with col_f1:
     qtd_comodos = st.number_input("Quantidade de Cômodos:", value=4, step=1, key="f_comodos")
     
     # --- REBOCO OPCIONAL ---
-    incluir_reboco = st.checkbox("Incluir Reboco na Casa?", value=True, key="chk_reboco")
+    incluir_reboco = st.checkbox("***Incluir Reboco na Casa?***", value=True, key="chk_reboco")
     if incluir_reboco:
         opcao_reboco = st.selectbox(
             "🧱 Tipo de Reboco da Casa:",
