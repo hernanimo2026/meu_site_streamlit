@@ -395,9 +395,7 @@ if incluir_muro:
             num_colunas_muro = math.floor(metros_muro / 3.0)
     else:
         num_colunas_muro = 0
-    #num_colunas_muro = math.ceil(metros_muro / 3.0) + 0
     metros_colunas_muro = num_colunas_muro * (altura_muro + 0.5)
-    
     metros_totais_ferro_muro = metros_muro + metros_muro + metros_colunas_muro
     varas_ferro_muro = math.ceil(metros_totais_ferro_muro / 6.0)
 
