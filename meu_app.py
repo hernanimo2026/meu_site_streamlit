@@ -1,5 +1,33 @@
 import math
 import streamlit as st
+import streamlit as st
+
+# Force o layout a ser centralizado (evita esticar no PDF)
+st.set_page_config(page_title="Calculadora do Pedreiro", layout="centered")
+
+# CSS para ajustar o PDF perfeito no celular e no computador
+st.markdown("""
+    <style>
+    @media print {
+        /* Configura a folha como A4 com margem segura */
+        @page {
+            size: A4 portrait;
+            margin: 8mm;
+        }
+        /* Reduz levemente o texto para caber nas colunas do celular */
+        html, body, [data-testid="stAppViewContainer"] {
+            font-size: 12px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: visible !important;
+        }
+        /* Remove botões e menus inúteis na hora de gerar o PDF */
+        header, footer, [data-testid="stToolbar"] {
+            display: none !important;
+        }
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # 1. Configuração da página
 st.set_page_config(
