@@ -185,8 +185,8 @@ with col_f3:
     incluir_muro = st.checkbox("Incluir Muro no Orçamento?", value=True, key="chk_muro")
     if incluir_muro:
         st.markdown("**🧱 Muro de Fechamento (Opcional):**")
-        metros_muro = st.number_input("Comprimento do Muro (Metros):", value=30.0, step=1.0, key="m_muro_m")
-        altura_muro = st.number_input("Altura do Muro (Metros):", value=2.0, step=0.1, key="m_muro_h")
+        metros_muro = st.number_input("Comprimento do Muro (Metros):", value=0.0, step=1.0, key="m_muro_m")
+        altura_muro = st.number_input("Altura do Muro (Metros):", value=0.0, step=0.1, key="m_muro_h")
         
         opcao_reboco_muro = st.selectbox(
             "Reboco do Muro:",
@@ -245,8 +245,8 @@ st.subheader("💰 2. Valoração do Serviço e Mão de Obra")
 col_v1, col_v2, col_v3 = st.columns(3)
 
 with col_v1:
-    valor_m2_mao_obra = st.number_input("Mão de Obra Casa (R$/m²):", value=400.0, step=10.0, key="v_mo_m2")
-    valor_m2_contrapiso_mo = st.number_input("Mão de Obra Contrapiso Extra (R$/m² - Zerar se incluso):", value=35.0, step=5.0, key="v_mo_cp")
+    valor_m2_mao_obra = st.number_input("Mão de Obra Casa (R$/m²):", value=0.0, step=10.0, key="v_mo_m2")
+    valor_m2_contrapiso_mo = st.number_input("Mão de Obra Contrapiso Extra (R$/m² - Zerar se incluso):", value=0.0, step=5.0, key="v_mo_cp")
     valor_metro_muro_mo = st.number_input("Mão de Obra Muro (R$/Metro Linear):", value=100.0, step=10.0, key="v_mo_muro") if incluir_muro else 0.0
     
     valor_mao_obra_casa = (area_construcao * valor_m2_mao_obra) + (area_construcao * valor_m2_contrapiso_mo if "Sem" not in opcao_contrapiso else 0.0)
@@ -255,10 +255,10 @@ with col_v1:
     st.caption(f"Mão de obra Casa: **R$ {valor_mao_obra_casa:,.2f}** | Muro: **R$ {valor_mao_obra_muro:,.2f}**")
 
 with col_v2:
-    valor_servicos_extras = st.number_input("Serviços Extras / Acabamento (R$):", value=500.0, step=100.0, key="v_extras_serv")
+    valor_servicos_extras = st.number_input("Serviços Extras / Acabamento (R$):", value=0.0, step=100.0, key="v_extras_serv")
 
 with col_v3:
-    reserva_materiais = st.number_input("Reserva p/ Materiais Extras (R$):", value=1000.0, step=50.0, key="v_reserva_mat")
+    reserva_materiais = st.number_input("Reserva p/ Materiais Extras (R$):", value=0.0, step=50.0, key="v_reserva_mat")
     desconto = st.number_input("Desconto Concedido (R$):", value=0.0, step=50.0, key="v_desconto")
 
 st.write("---")
@@ -289,11 +289,11 @@ else:
 # --- B. MATERIAIS DA CASA ---
 perimetro_externo_casa = math.sqrt(area_construcao) * 4
 perimetro_total_paredes = perimetro_externo_casa + (qtd_comodos * 3.5)
-area_paredes_casa = perimetro_total_paredes * 2.80
+area_paredes_casa = perimetro_total_paredes * 3.00
 
 # --- LÓGICA DA PLATIBANDA ---
 if incluir_telhado and "Platibanda" in estilo_telhado:
-    altura_platibanda = 0.80
+    altura_platibanda = 1.0
     area_platibanda = perimetro_externo_casa * altura_platibanda
 else:
     area_platibanda = 0.0
