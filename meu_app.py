@@ -1,33 +1,46 @@
 import math
 import streamlit as st
 import streamlit as st
+import math
+from fpdf import FPDF  # <--- Adicione esta importação no topo
 
-# Force o layout a ser centralizado (evita esticar no PDF)
-st.set_page_config(page_title="Calculadora do Pedreiro", layout="centered")
+# ==========================================
+# PASSO 2: FUNÇÃO GERADORA DE PDF
+# ==========================================
+def gerar_pdf_orcamento(total_casa, total_muro, total_geral, lista_materiais):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    
+    # Cabeçalho
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(0, 10, "ORÇAMENTO DE CONSTRUÇÃO", ln=True, align='C')
+    pdf.ln(5)
+    
+    # Totais
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(0, 8, f"VALOR TOTAL DA OBRA: R$ {total_geral:,.2f}", ln=True)
+    pdf.set_font("Arial", size=10)
+    pdf.cell(0, 6, f"Subtotal Casa: R$ {total_casa:,.2f} | Subtotal Muro: R$ {total_muro:,.2f}", ln=True)
+    pdf.ln(5)
+    
+    # Linha divisória
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+    pdf.ln(5)
+    
+    # Materiais
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(0, 8, "Resumo dos Materiais:", ln=True)
+    pdf.set_font("Arial", size=10)
+    
+    for item in lista_materiais:
+        pdf.multi_cell(0, 6, f"• {item}")
+        
+    return pdf.output(dest='S').encode('latin-1')
 
-# CSS para ajustar o PDF perfeito no celular e no computador
-st.markdown("""
-    <style>
-    @media print {
-        /* Configura a folha como A4 com margem segura */
-        @page {
-            size: A4 portrait;
-            margin: 8mm;
-        }
-        /* Reduz levemente o texto para caber nas colunas do celular */
-        html, body, [data-testid="stAppViewContainer"] {
-            font-size: 12px !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            overflow: visible !important;
-        }
-        /* Remove botões e menus inúteis na hora de gerar o PDF */
-        header, footer, [data-testid="stToolbar"] {
-            display: none !important;
-        }
-    }
-    </style>
-""", unsafe_allow_html=True)
+# ==========================================
+# RESTANTE DO SEU CÓDIGO COMEÇA AQUI...
+# ==========================================
 
 # 1. Configuração da página
 st.set_page_config(
@@ -275,7 +288,7 @@ col_v1, col_v2, col_v3 = st.columns(3)
 with col_v1:
     valor_m2_mao_obra = st.number_input("Mão de Obra Casa (R$/m²):", value=0.0, step=10.0, key="v_mo_m2")
     valor_m2_contrapiso_mo = st.number_input("Mão de Obra Contrapiso Extra (R$/m² - Zerar se incluso):", value=0.0, step=5.0, key="v_mo_cp")
-    valor_metro_muro_mo = st.number_input("Mão de Obra Muro (R$/Metro Linear):", value=0.0, step=10.0, key="v_mo_muro") if incluir_muro else 0.0
+    valor_metro_muro_mo = st.number_input("Mão de Obra Muro (R$/Metro Linear):", value=100.0, step=10.0, key="v_mo_muro") if incluir_muro else 0.0
     
     valor_mao_obra_casa = (area_construcao * valor_m2_mao_obra) + (area_construcao * valor_m2_contrapiso_mo if "Sem" not in opcao_contrapiso else 0.0)
     valor_mao_obra_muro = metros_muro * valor_metro_muro_mo
