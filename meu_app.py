@@ -95,8 +95,8 @@ col_f1, col_f2, col_f3 = st.columns(3)
 
 with col_f1:
     st.markdown("****🏠 Estrutura da Casa:****")
-    area_construcao = st.number_input("Área Total da Casa (m²):", value=63.0, step=1.0, key="f_area")
-    qtd_comodos = st.number_input("Quantidade de Cômodos:", value=4, step=1, key="f_comodos")
+    area_construcao = st.number_input("Área Total da Casa (m²):", value=0.0, step=1.0, key="f_area")
+    qtd_comodos = st.number_input("Quantidade de Cômodos:", value=0, step=1, key="f_comodos")
     
     # --- REBOCO OPCIONAL ---
     incluir_reboco = st.checkbox("***Incluir Reboco na Casa?***", value=True, key="chk_reboco")
