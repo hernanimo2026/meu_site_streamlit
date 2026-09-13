@@ -1,5 +1,3 @@
-import math
-import streamlit as st
 import streamlit as st
 import math
 from fpdf import FPDF  # <--- Adicione esta importação no topo
