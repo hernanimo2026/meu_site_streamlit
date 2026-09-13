@@ -64,20 +64,20 @@ with st.expander("🏪 Preços dos Materiais no Depósito (Clique para ajustar o
     col_dep1, col_dep2, col_dep3 = st.columns(3)
     
     with col_dep1:
-        st.markdown("**🧱 Alvenaria e Agregados:**")
+        st.markdown("****🧱 Alvenaria e Agregados:****")
         preco_tijolo = st.number_input("Milheiro de Tijolo (R$):", value=1450.0, step=50.0, key="p_tijolo")
         preco_cimento = st.number_input("Saco de Cimento 50kg (R$):", value=50.0, step=1.0, key="p_cimento")
         preco_areia = st.number_input("Metro de Areia (R$):", value=180.0, step=5.0, key="p_areia")
         preco_pedra = st.number_input("Metro de Pedra/Brita (R$):", value=240.0, step=5.0, key="p_pedra")
 
     with col_dep2:
-        st.markdown("**⛓️ Ferragens (Varas de 6m):**") 
+        st.markdown("****⛓️ Ferragens (Varas de 6m):****") 
         preco_ferro_38 = st.number_input("Coluna/Viga 3/8 (R$):", value=170.0, step=2.0, key="p_f_38")
         preco_ferro_516 = st.number_input("Coluna/Viga 5/16 (R$):", value=120.0, step=2.0, key="p_f_516")
         preco_trelica_h8 = st.number_input("Treliça H8 (R$):", value=45.0, step=1.0, key="p_t_h8")
 
     with col_dep3:
-        st.markdown("**🏠 Cobertura e Madeiramento:**")
+        st.markdown("****🏠 Cobertura e Madeiramento:****")
         preco_telha_ceramica = st.number_input("Milheiro Telha Cerâmica (R$):", value=1800.0, step=50.0, key="p_t_cer")
         preco_telha_fibro = st.number_input("Telha Fibrocimento 2,44m (R$):", value=58.0, step=2.0, key="p_t_fib")
         preco_telha_sanduiche = st.number_input("Telha Sanduíche / m² (R$):", value=95.0, step=5.0, key="p_t_sand")
@@ -99,7 +99,7 @@ with col_f1:
     qtd_comodos = st.number_input("Quantidade de Cômodos:", value=0, step=1, key="f_comodos")
     
     # --- REBOCO OPCIONAL ---
-    incluir_reboco = st.checkbox("***Incluir Reboco na Casa?***", value=False, key="chk_reboco")
+    incluir_reboco = st.checkbox("****Incluir Reboco na Casa?****", value=False, key="chk_reboco")
     if incluir_reboco:
         opcao_reboco = st.selectbox(
             "🧱 Tipo de Reboco da Casa:",
@@ -129,7 +129,7 @@ with col_f1:
 
 with col_f2:
     # --- FERRAGENS OPCIONAIS ---
-    incluir_ferragens = st.checkbox("Incluir Ferragens no Orçamento?", value=False, key="chk_ferragens")
+    incluir_ferragens = st.checkbox("****Incluir Ferragens no Orçamento****?", value=False, key="chk_ferragens")
 
     if incluir_ferragens:
         nivel_reforco = st.selectbox(
@@ -146,7 +146,7 @@ with col_f2:
         nivel_reforco = "Sem Ferragem"
     
     # --- TELHADO OPCIONAL ---
-    incluir_telhado = st.checkbox("Incluir Telhado / Cobertura?", value=False, key="chk_telhado")
+    incluir_telhado = st.checkbox("****Incluir Telhado / Cobertura?****", value=False, key="chk_telhado")
     if incluir_telhado:
         st.markdown("**🏠 TELHADO:**")
         tipo_telha = st.selectbox(
@@ -182,7 +182,7 @@ with col_f2:
         opcao_telhado = "Sem Cobertura / Sem Telhado"
 
 with col_f3:
-    incluir_muro = st.checkbox("Incluir Muro no Orçamento?", value=False, key="chk_muro")
+    incluir_muro = st.checkbox("****Incluir Muro no Orçamento?****", value=False, key="chk_muro")
     if incluir_muro:
         st.markdown("**🧱 Muro de Fechamento (Opcional):**")
         metros_muro = st.number_input("Comprimento do Muro (Metros):", value=0.0, step=1.0, key="m_muro_m")
