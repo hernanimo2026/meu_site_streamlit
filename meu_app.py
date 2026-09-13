@@ -310,10 +310,10 @@ area_reb_casa = area_paredes_casa * fator_reb_casa
 
 # CÁLCULO DO CONTRAPISO
 if "5 cm" in opcao_contrapiso:
-    espessura_cp = 0.05
+    espessura_cp = 0.04
     sacos_cimento_cp = math.ceil(area_construcao * 0.35)
 elif "7 cm" in opcao_contrapiso:
-    espessura_cp = 0.07
+    espessura_cp = 0.06
     sacos_cimento_cp = math.ceil(area_construcao * 0.50)
 else:
     espessura_cp = 0.0
