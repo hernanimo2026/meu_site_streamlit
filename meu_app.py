@@ -444,7 +444,7 @@ st.info(f"**Pedido do Cliente:** {descricao_cliente}")
 col_r1, col_r2 = st.columns(2)
 
 with col_r1:
-    st.markdown("### 🏠 Materiais da Casa (Inclui Contrapiso):")
+    st.markdown("### 🏠 Materiais da Casa ():")
     st.write(f"• **Contrapiso Incluso:** {opcao_contrapiso} ({area_construcao:.0f} m²)")
     st.write(f"• **Tijolos:** {int(qtd_tijolos_casa)} un → **R$ {custo_tijolos_casa:,.2f}**")
     
