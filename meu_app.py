@@ -99,7 +99,7 @@ with col_f1:
     qtd_comodos = st.number_input("Quantidade de Cômodos:", value=0, step=1, key="f_comodos")
     
     # --- REBOCO OPCIONAL ---
-    incluir_reboco = st.checkbox("***Incluir Reboco na Casa?***", value=True, key="chk_reboco")
+    incluir_reboco = st.checkbox("***Incluir Reboco na Casa?***", value=False, key="chk_reboco")
     if incluir_reboco:
         opcao_reboco = st.selectbox(
             "🧱 Tipo de Reboco da Casa:",
@@ -113,7 +113,7 @@ with col_f1:
         opcao_reboco = "Sem Reboco (Tijolo Aparente / Sem Massa)"
 
     # --- CONTRAPISO OPCIONAL ---
-    incluir_contrapiso = st.checkbox("Incluir Contrapiso / Base?", value=True, key="chk_contrapiso")
+    incluir_contrapiso = st.checkbox("Incluir Contrapiso / Base?", value=False, key="chk_contrapiso")
     if incluir_contrapiso:
         opcao_contrapiso = st.selectbox(
             "📐 Espessura do Contrapiso:",
@@ -129,7 +129,7 @@ with col_f1:
 
 with col_f2:
     # --- FERRAGENS OPCIONAIS ---
-    incluir_ferragens = st.checkbox("Incluir Ferragens no Orçamento?", value=True, key="chk_ferragens")
+    incluir_ferragens = st.checkbox("Incluir Ferragens no Orçamento?", value=False, key="chk_ferragens")
 
     if incluir_ferragens:
         nivel_reforco = st.selectbox(
@@ -146,7 +146,7 @@ with col_f2:
         nivel_reforco = "Sem Ferragem"
     
     # --- TELHADO OPCIONAL ---
-    incluir_telhado = st.checkbox("Incluir Telhado / Cobertura?", value=True, key="chk_telhado")
+    incluir_telhado = st.checkbox("Incluir Telhado / Cobertura?", value=False, key="chk_telhado")
     if incluir_telhado:
         st.markdown("**🏠 TELHADO:**")
         tipo_telha = st.selectbox(
@@ -182,7 +182,7 @@ with col_f2:
         opcao_telhado = "Sem Cobertura / Sem Telhado"
 
 with col_f3:
-    incluir_muro = st.checkbox("Incluir Muro no Orçamento?", value=True, key="chk_muro")
+    incluir_muro = st.checkbox("Incluir Muro no Orçamento?", value=False, key="chk_muro")
     if incluir_muro:
         st.markdown("**🧱 Muro de Fechamento (Opcional):**")
         metros_muro = st.number_input("Comprimento do Muro (Metros):", value=0.0, step=1.0, key="m_muro_m")
