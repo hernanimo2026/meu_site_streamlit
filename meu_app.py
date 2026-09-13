@@ -386,8 +386,16 @@ if incluir_muro:
 
     pedra_muro = metros_muro * 0.04
     custo_pedra_muro = pedra_muro * preco_pedra
-
-    num_colunas_muro = math.ceil(metros_muro / 3.0) + 0
+    if incluir_muro and metros_muro > 0:
+        if metros_muro < 2.5:
+            num_colunas_muro = 0
+        elif 2.5 <= metros_muro <= 4.0:
+            num_colunas_muro = 1
+        else:
+            num_colunas_muro = math.floor(metros_muro / 3.0)
+    else:
+        num_colunas_muro = 0
+    #num_colunas_muro = math.ceil(metros_muro / 3.0) + 0
     metros_colunas_muro = num_colunas_muro * (altura_muro + 0.5)
     
     metros_totais_ferro_muro = metros_muro + metros_muro + metros_colunas_muro
