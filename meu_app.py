@@ -94,7 +94,7 @@ st.subheader("🗣️ 1. O que o cliente deseja construir?")
 col_f1, col_f2, col_f3 = st.columns(3)
 
 with col_f1:
-    st.markdown("****🏠 Estrutura da Casa:****")
+    st.markdown("##🏠 Estrutura da Casa:")
     area_construcao = st.number_input("Área Total da Casa (m²):", value=0.0, step=1.0, key="f_area")
     qtd_comodos = st.number_input("Quantidade de Cômodos:", value=0, step=1, key="f_comodos")
     
@@ -113,7 +113,7 @@ with col_f1:
         opcao_reboco = "Sem Reboco (Tijolo Aparente / Sem Massa)"
 
     # --- CONTRAPISO OPCIONAL ---
-    incluir_contrapiso = st.checkbox("Incluir Contrapiso / Base?", value=False, key="chk_contrapiso")
+    incluir_contrapiso = st.checkbox("##Incluir Contrapiso / Base?", value=False, key="chk_contrapiso")
     if incluir_contrapiso:
         opcao_contrapiso = st.selectbox(
             "📐 Espessura do Contrapiso:",
