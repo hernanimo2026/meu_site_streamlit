@@ -1,44 +1,5 @@
-import streamlit as st
 import math
-from fpdf import FPDF  # <--- Adicione esta importação no topo
-
-# ==========================================
-# PASSO 2: FUNÇÃO GERADORA DE PDF
-# ==========================================
-def gerar_pdf_orcamento(total_casa, total_muro, total_geral, lista_materiais):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_auto_page_break(auto=True, margin=15)
-    
-    # Cabeçalho
-    pdf.set_font("Arial", 'B', 16)
-    pdf.cell(0, 10, "ORÇAMENTO DE CONSTRUÇÃO", ln=True, align='C')
-    pdf.ln(5)
-    
-    # Totais
-    pdf.set_font("Arial", 'B', 12)
-    pdf.cell(0, 8, f"VALOR TOTAL DA OBRA: R$ {total_geral:,.2f}", ln=True)
-    pdf.set_font("Arial", size=10)
-    pdf.cell(0, 6, f"Subtotal Casa: R$ {total_casa:,.2f} | Subtotal Muro: R$ {total_muro:,.2f}", ln=True)
-    pdf.ln(5)
-    
-    # Linha divisória
-    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
-    pdf.ln(5)
-    
-    # Materiais
-    pdf.set_font("Arial", 'B', 12)
-    pdf.cell(0, 8, "Resumo dos Materiais:", ln=True)
-    pdf.set_font("Arial", size=10)
-    
-    for item in lista_materiais:
-        pdf.multi_cell(0, 6, f"• {item}")
-        
-    return pdf.output(dest='S').encode('latin-1')
-
-# ==========================================
-# RESTANTE DO SEU CÓDIGO COMEÇA AQUI...
-# ==========================================
+import streamlit as st
 
 # 1. Configuração da página
 st.set_page_config(
