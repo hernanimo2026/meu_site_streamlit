@@ -1,8 +1,8 @@
 import unicodedata
-import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
+import pandas as pd
 
 st.set_page_config(
     page_title="Painel Eleitoral Brasil",
@@ -73,26 +73,23 @@ uf_map = {
 
 @st.cache_data
 def carregar_malha_2025():
-    # Tenta carregar com acento ou sem acento para evitar erros de leitura
-    for nome in [
-        "BR_malha_Municípios_2025.xlsx",
-        "BR_malha_Municipios_2025.xlsx",
-    ]:
-        try:
-            df = pd.read_excel(nome, usecols=["NM_MUN", "SIGLA_UF"])
-            df["nm_municipio"] = df["NM_MUN"].apply(remover_acentos)
-            df["sg_uf"] = df["SIGLA_UF"]
-            df["municipio_id"] = df["nm_municipio"] + " - " + df["sg_uf"]
-            return df
-        except Exception:
-            continue
-    return pd.DataFrame()
+    try:
+        df = pd.read_excel(
+            "BR_malha_Municipios_2025.xlsx", usecols=["NM_MUN", "SIGLA_UF"]
+        )
+        df["nm_municipio"] = df["NM_MUN"].apply(remover_acentos)
+        df["sg_uf"] = df["SIGLA_UF"]
+        df["municipio_id"] = df["nm_municipio"] + " - " + df["sg_uf"]
+        return df
+    except Exception:
+        return pd.DataFrame()
 
 
 @st.cache_data
 def carregar_dados_2022():
     try:
         df = pd.read_excel("geral.xlsx")
+
         if "geocodigo" in df.columns and "nome" in df.columns:
             df["UF_code"] = (
                 pd.to_numeric(df["geocodigo"], errors="coerce")
@@ -233,6 +230,30 @@ def carregar_dados_csv(ano):
 
 
 @st.cache_data
+def carregar_vereadores_2024():
+    cols_ver = [
+        "sg_uf",
+        "nm_municipio",
+        "sg_partido",
+        "nm_candidato",
+        "ds_sit_tot_turno",
+        "qt_votos_nom_validos",
+    ]
+    try:
+        df = pd.read_csv(
+            "cand_mais_votado-municipio_vereador_t1_2024.csv",
+            sep=";",
+            encoding="latin1",
+            usecols=lambda c: c in cols_ver,
+        )
+        df["nm_municipio"] = df["nm_municipio"].apply(remover_acentos)
+        df["municipio_id"] = df["nm_municipio"] + " - " + df["sg_uf"]
+        return df
+    except Exception:
+        return pd.DataFrame()
+
+
+@st.cache_data
 def carregar_vagas_2026():
     try:
         return pd.read_csv(
@@ -261,7 +282,7 @@ def obter_coligacao(cand):
 st.title("📱 Painel Eleitoral Brasil")
 
 tab1, tab2, tab3 = st.tabs(
-    ["📊 Visão Geral", "🔍 Consulta por Cidade", "📈 Projeções 2026"]
+    ["📊 Visão Geral", "🔍 Consulta por Cidade", "📈 Projeções & Força 2026"]
 )
 
 # --- ABA 1: VISÃO GERAL ---
@@ -369,6 +390,7 @@ with tab2:
     df_2020 = carregar_dados_csv("2020")
     df_2022 = carregar_dados_2022()
     df_2024 = carregar_dados_csv("2024")
+    df_ver_2024 = carregar_vereadores_2024()
 
     cidades_lista = (
         sorted(df_malha["municipio_id"].dropna().unique())
@@ -420,7 +442,56 @@ with tab2:
                     f"**Coligação:** {colig_2024}"
                 )
             else:
-                st.info("Sem dados de 2024 para esta cidade.")
+                st.info("Sem dados de 2024.")
+
+            st.markdown("#### 🗳️ Vereadores Eleitos (2024)")
+            if not df_ver_2024.empty:
+                v_cid = df_ver_2024[
+                    (df_ver_2024["municipio_id"] == cidade_selecionada)
+                    & (
+                        df_ver_2024["ds_sit_tot_turno"].isin(
+                            ["Eleito por QP", "Eleito por média", "Eleito"]
+                        )
+                    )
+                ]
+
+                if not v_cid.empty:
+                    v_resumo = (
+                        v_cid.groupby("sg_partido")
+                        .size()
+                        .reset_index(name="Cadeiras")
+                        .sort_values(by="Cadeiras", ascending=False)
+                    )
+                    cols = st.columns(len(v_resumo))
+                    for idx, row in v_resumo.reset_index(drop=True).iterrows():
+                        if idx < len(cols):
+                            cols[idx].metric(
+                                row["sg_partido"], f"{row['Cadeiras']} seg."
+                            )
+
+                    st.dataframe(
+                        v_cid[
+                            [
+                                "nm_candidato",
+                                "sg_partido",
+                                "qt_votos_nom_validos",
+                                "ds_sit_tot_turno",
+                            ]
+                        ]
+                        .rename(
+                            columns={
+                                "nm_candidato": "Nome",
+                                "sg_partido": "Partido",
+                                "qt_votos_nom_validos": "Votos",
+                                "ds_sit_tot_turno": "Situação",
+                            }
+                        )
+                        .sort_values(by="Votos", ascending=False),
+                        use_container_width=True,
+                        hide_index=True,
+                    )
+                else:
+                    st.info("Sem registro de vereadores eleitos.")
 
             st.markdown("#### 🇧🇷 Eleições 2022 (Presidencial)")
             if not e2022.empty:
@@ -444,7 +515,7 @@ with tab2:
                     f"**Coligação:** {colig_2022}"
                 )
             else:
-                st.info("Sem dados de 2022 para esta cidade.")
+                st.info("Sem dados de 2022.")
 
             st.markdown("#### 🏛️ Eleições 2020 (Prefeito)")
             if not e2020.empty:
@@ -460,11 +531,11 @@ with tab2:
                     f"**Coligação:** {colig_2020}"
                 )
             else:
-                st.info("Sem dados de 2020 para esta cidade.")
+                st.info("Sem dados de 2020.")
 
-# --- ABA 3: PROJEÇÕES 2026 ---
+# --- ABA 3: PROJEÇÕES & FORÇA 2026 ---
 with tab3:
-    st.subheader("📈 Projeção e Vagas 2026")
+    st.subheader("📈 Capilaridade e Força Política para 2026")
 
     df_vagas = carregar_vagas_2026()
     ufs_vagas = (
@@ -473,7 +544,8 @@ with tab3:
         else []
     )
     uf_proj = st.selectbox(
-        "Selecione a UF:", options=["Brasil (Todos)"] + ufs_vagas
+        "Selecione a UF para Análise Projetiva:",
+        options=["Brasil (Todos)"] + ufs_vagas,
     )
 
     if not df_vagas.empty:
@@ -494,3 +566,106 @@ with tab3:
         for idx, row in vagas_summary.reset_index(drop=True).iterrows():
             if idx < len(v_cols):
                 v_cols[idx].metric(row["DS_CARGO"], int(row["QT_VAGA"]))
+
+    st.markdown("---")
+
+    st.markdown("### 🏛️ Comparativo de Prefeituras (2020 vs 2024)")
+    if not df_2020.empty and not df_2024.empty:
+        d20 = (
+            df_2020
+            if uf_proj == "Brasil (Todos)"
+            else df_2020[df_2020["sg_uf"] == uf_proj]
+        )
+        d24 = (
+            df_2024
+            if uf_proj == "Brasil (Todos)"
+            else df_2024[df_2024["sg_uf"] == uf_proj]
+        )
+
+        e20 = (
+            d20[
+                d20["ds_sit_tot_turno"].isin(
+                    ["Eleito", "Eleito por QP", "Eleito por média"]
+                )
+            ]
+            .groupby("sg_partido")
+            .size()
+            .reset_index(name="Prefeituras 2020")
+        )
+        e24 = (
+            d24[
+                d24["ds_sit_tot_turno"].isin(
+                    ["Eleito", "Eleito por QP", "Eleito por média"]
+                )
+            ]
+            .groupby("sg_partido")
+            .size()
+            .reset_index(name="Prefeituras 2024")
+        )
+
+        df_comp = pd.merge(e20, e24, on="sg_partido", how="outer").fillna(0)
+        df_comp = df_comp.sort_values(
+            by="Prefeituras 2024", ascending=False
+        ).head(15)
+
+        fig_comp = go.Figure()
+        fig_comp.add_trace(
+            go.Bar(
+                x=df_comp["sg_partido"],
+                y=df_comp["Prefeituras 2020"],
+                name="2020",
+                marker_color="#90A4AE",
+            )
+        )
+        fig_comp.add_trace(
+            go.Bar(
+                x=df_comp["sg_partido"],
+                y=df_comp["Prefeituras 2024"],
+                name="2024",
+                marker_color="#1E88E5",
+            )
+        )
+        fig_comp.update_layout(
+            barmode="group",
+            height=400,
+            margin=dict(t=30, l=10, r=10, b=10),
+            title="Prefeituras Conquistadas por Partido",
+        )
+        st.plotly_chart(fig_comp, use_container_width=True)
+
+    st.markdown("### 🗳️ Total de Vereadores Eleitos em 2024 por Partido")
+    if not df_ver_2024.empty:
+        dver = (
+            df_ver_2024
+            if uf_proj == "Brasil (Todos)"
+            else df_ver_2024[df_ver_2024["sg_uf"] == uf_proj]
+        )
+        v_eleitos = dver[
+            dver["ds_sit_tot_turno"].isin(
+                ["Eleito por QP", "Eleito por média", "Eleito"]
+            )
+        ]
+
+        if not v_eleitos.empty:
+            v_partido = (
+                v_eleitos.groupby("sg_partido")
+                .size()
+                .reset_index(name="Vereadores")
+                .sort_values(by="Vereadores", ascending=False)
+                .head(15)
+            )
+
+            fig_v = px.bar(
+                v_partido,
+                x="sg_partido",
+                y="Vereadores",
+                color="sg_partido",
+                color_discrete_map=cores_partidos,
+                text="Vereadores",
+                title="Bases de Vereadores (Principais Partidos)",
+            )
+            fig_v.update_traces(textposition="outside")
+            fig_v.update_layout(
+                height=400, showlegend=False, margin=dict(t=30, l=10, r=10, b=10)
+            )
+            st.plotly_chart(fig_v, use_container_width=True)
