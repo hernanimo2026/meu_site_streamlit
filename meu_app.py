@@ -6,7 +6,18 @@ st.set_page_config(
     page_title="Urna Simulada Nacional", page_icon="🗳️", layout="centered"
 )
 
+# --- CABEÇALHO DA PÁGINA ---
 st.title("🗳️ Simulador de Votação Nacional")
+
+# --- MANUAL DISCRETO (POPUP/POPOVER - NÃO OCUPA ESPAÇO) ---
+with st.popover("ℹ️ Como votar (Clique aqui)"):
+    st.markdown("""
+    **Guia Rápido do Eleitor:**
+    1. **Estado:** Escolha a sua Unidade da Federação (UF) na caixa de seleção.
+    2. **Voto:** Clique no botão do espectro ou opção desejada.
+    3. **Apuração:** Acompanhe os gráficos gerais e por estado em tempo real!
+    """)
+
 st.write(
     "Selecione o seu estado, vote para acompanhar a apuração em tempo real e entenda como funcionam os votos válidos!"
 )
